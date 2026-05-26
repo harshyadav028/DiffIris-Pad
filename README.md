@@ -1,8 +1,11 @@
 # Diff-IrisPAD: Diffusion-Based Iris Presentation Attack Detection
 
 **Zero Attack Knowledge (ZAK) Protocol — IJCB Submission**
-CS671 Deep Learning Final Project — Group 18, IIT Mandi (Spring 2026)
-Mentor: Geetanjali Sharma
+CS671 Deep Learning & Applications | IIT Mandi (Spring 2026)
+Group 18 | Mentor: Geetanjali Sharma | Evaluator: Dr. Aditya Nigam
+
+**Checkpoints:** [huggingface.co/realharshyadav/DiffIris_Pad_checkpointings](https://huggingface.co/realharshyadav/DiffIris_Pad_checkpointings/tree/main)
+**Code:** [github.com/harshyadav028/DiffIris-Pad](https://github.com/harshyadav028/DiffIris-Pad)
 
 ---
 
@@ -21,7 +24,8 @@ Diff-IrisPAD trains a Latent Brownian Bridge Diffusion Model (LBBDM-f4) exclusiv
 5. [Step-by-Step Verification Guide](#5-step-by-step-verification-guide)
 6. [File Reference Index](#6-file-reference-index)
 7. [Baselines](#7-baselines)
-8. [Authors and Citation](#8-authors-and-citation)
+8. [Contributors](#8-contributors)
+9. [Citation](#9-citation)
 
 ---
 
@@ -904,6 +908,21 @@ cat iris_bbdm_pad/results/zak_ijcb_aligned/zak_viva_summary.md
 > Steps 1–10 above are sufficient to verify all paper numbers without a GPU.
 > This step is only needed if you want to re-run the model from scratch.
 
+Download checkpoints from HuggingFace first:
+
+```bash
+# Primary LBBDM-f4 checkpoint (955 MB)
+wget https://huggingface.co/realharshyadav/DiffIris_Pad_checkpointings/resolve/main/top_model_epoch_70.pth \
+    -P results/iris_bonafide_pad/LBBDM-f4/checkpoint/
+
+# VQGAN encoder (665 MB)
+wget https://huggingface.co/realharshyadav/DiffIris_Pad_checkpointings/resolve/main/vq-f4.zip \
+    -P BBDM/resources/vq-f4/
+cd BBDM/resources/vq-f4 && unzip vq-f4.zip && cd -
+```
+
+Then run inference:
+
 ```bash
 # Score val and test splits with ViT-B/16 (50 DDIM steps)
 # Runtime: approximately 2–3 hours on a single GPU
@@ -990,12 +1009,20 @@ The best AnoDDPM configuration (ACER 39.73%) is the non-ZAK baseline in the pape
 
 ---
 
-## 8. Authors and Citation
+## 8. Contributors
 
-**Method:** Diff-IrisPAD — Unsupervised Iris PAD via Latent Brownian Bridge Diffusion Models
-**Course:** CS671 Deep Learning Final Project, Group 18, IIT Mandi (Spring 2026)
+**Course:** CS671 Deep Learning & Applications | IIT Mandi (Spring 2026)
+**Group Number:** 18
 **Mentor:** Geetanjali Sharma
 **Evaluator:** Dr. Aditya Nigam
+
+**Roll Numbers:** B24119, B24127, B24132, B24133, B24155, B24157, B24179, B24182
+
+**Checkpoints:** [huggingface.co/realharshyadav/DiffIris_Pad_checkpointings](https://huggingface.co/realharshyadav/DiffIris_Pad_checkpointings/tree/main)
+
+---
+
+## 9. Citation
 
 ```bibtex
 @inproceedings{diffirispad2026,
