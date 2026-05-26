@@ -1,0 +1,44 @@
+\begin{table}[!htbp]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\label{tab:diffusion_comparison}
+\caption{
+\textbf{Comparison of diffusion-based iris PAD methods under the per-attack Zero-Attack-Knowledge (ZAK) protocol.}
+For each attack, $\tau$ is the percentile of bona-fide validation scores (column $p$) that minimises per-attack ACER on the validation set; no attack labels are used to determine threshold values.
+Test pool merges validation- and test-split attacks (50{,}612 attacks $+$ 12{,}926 bona-fide).
+All metrics in \% (lower is better); \textbf{bold} = best ACER per attack.
+}
+
+\begin{tabular}{l l c c c c c c}
+\toprule
+\textbf{Model} & \textbf{Attack} & $p$ & $\tau$ & APCER & BPCER & ACER & EER \\
+\midrule
+
+\multirow{9}{*}{\shortstack[l]{AnoDDPM \\DDIM\\Simplex\\ \cite{ho2020denoising}}}
+& Artifact       & 18 & 0.323 &   0.00 &  82.93 &                41.46 &          50.83 \\
+& CL             & 21 & 0.405 &   2.45 &  79.73 &                41.09 &          45.22 \\
+& E-display      &  5 & 0.091 &   1.19 &  95.69 &                48.44 &          75.27 \\
+& Fake W/AO      & 37 & 0.596 &  11.32 &  62.96 &                37.14 &          36.82 \\
+& Generated      & 23 & 0.447 &   2.71 &  77.78 &                40.25 &          44.99 \\
+& PostMortem     & 56 & 0.712 &   5.99 &  42.77 &                24.38 &          26.85 \\
+& Print \& ED    &  9 & 0.142 &   1.45 &  91.92 &                46.68 &          63.72 \\
+& Printed        & 92 & 0.868 &  83.11 &   7.37 &                45.24 &          47.67 \\
+& \textbf{All}  & 10 & 0.159 &   3.18 &  91.10 &                47.14 &          50.62 \\
+
+\midrule
+
+\multirow{9}{*}{\shortstack[l]{\textbf{Diff-IrisPAD}\\ (Ours)}}
+& Artifact       & 92 & 0.183 &   1.32 &   8.71 &        \textbf{5.02} &  \textbf{5.18} \\
+& CL             & 39 & 0.052 &  11.82 &  69.32 &       \textbf{40.57} & \textbf{40.95} \\
+& E-display      & 79 & 0.116 &  20.33 &  23.23 &       \textbf{21.78} & \textbf{21.95} \\
+& Fake W/AO      & 91 & 0.175 &   2.83 &   9.86 &        \textbf{6.34} &  \textbf{7.55} \\
+& Generated      & 50 & 0.064 &  11.83 &  56.72 &       \textbf{34.28} & \textbf{37.91} \\
+& PostMortem     & 89 & 0.163 &   4.43 &  11.80 &        \textbf{8.11} &  \textbf{8.50} \\
+& Print \& ED    & 80 & 0.120 &  20.95 &  22.07 &       \textbf{21.51} & \textbf{21.53} \\
+& Printed        & 72 & 0.100 &  16.01 &  30.58 &       \textbf{23.30} & \textbf{23.35} \\
+& \textbf{All}  & 69 & 0.093 &  21.88 &  34.44 &       \textbf{28.16} & \textbf{27.73} \\
+
+\bottomrule
+\end{tabular}
+\end{table}

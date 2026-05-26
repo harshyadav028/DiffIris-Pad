@@ -1,0 +1,9 @@
+{
+  "config_path": "iris_bbdm_pad/configs/bbdm_iris_bonafide.yaml",
+  "start_time": "2026-03-21T18:58:50.326757",
+  "end_time": "2026-03-24T02:44:31.789908",
+  "gpu": "NVIDIA RTX A5000",
+  "final_checkpoint": "/home/teaching/Documents/Geetanjali_PhD_IRIS_PAD/results/iris_bonafide_pad/LBBDM-f4/checkpoint/top_model_epoch_70.pth",
+  "command": "/home/teaching/miniconda3/envs/iris_pad/bin/python /home/teaching/Documents/Geetanjali_PhD_IRIS_PAD/BBDM/main.py --config iris_bbdm_pad/configs/bbdm_iris_bonafide.yaml --train --sample_at_start --save_top --gpu_ids 0 --seed 42",
+  "exit_code": 0
+}

@@ -1,0 +1,137 @@
+!!python/object:argparse.Namespace
+args: !!python/object:argparse.Namespace
+  config: /home/teaching/Documents/Geetanjali_PhD_IRIS_PAD/iris_bbdm/configs/iris_pad_lbbdm_f4.yaml
+  gpu_ids: '0'
+  max_epoch: null
+  max_steps: null
+  port: '12355'
+  result_path: results
+  resume_model: null
+  resume_optim: null
+  sample_at_start: true
+  sample_to_eval: false
+  save_top: true
+  seed: 1234
+  train: true
+data: !!python/object:argparse.Namespace
+  dataset_config: !!python/object:argparse.Namespace
+    channels: 3
+    dataset_path: iris_bbdm/data/iris_pairs
+    flip: false
+    image_size: 256
+    to_normal: true
+  dataset_name: IrisPAD
+  dataset_type: custom_aligned
+  test: !!python/object:argparse.Namespace
+    batch_size: 16
+  train: !!python/object:argparse.Namespace
+    batch_size: 8
+    shuffle: true
+  val: !!python/object:argparse.Namespace
+    batch_size: 8
+    shuffle: false
+model: !!python/object:argparse.Namespace
+  BB: !!python/object:argparse.Namespace
+    lr_scheduler: !!python/object:argparse.Namespace
+      cooldown: 3000
+      factor: 0.5
+      min_lr: 5.0e-07
+      patience: 3000
+      threshold: 0.0001
+    optimizer: !!python/object:argparse.Namespace
+      beta1: 0.9
+      lr: 0.0001
+      optimizer: Adam
+      weight_decay: 0.0
+    params: !!python/object:argparse.Namespace
+      UNetParams: !!python/object:argparse.Namespace
+        attention_resolutions:
+        - 32
+        - 16
+        - 8
+        channel_mult:
+        - 1
+        - 2
+        - 3
+        - 4
+        condition_key: nocond
+        context_dim: null
+        conv_resample: true
+        dims: 2
+        image_size: 64
+        in_channels: 3
+        model_channels: 128
+        num_head_channels: 64
+        num_heads: 8
+        num_res_blocks: 2
+        out_channels: 3
+        resblock_updown: true
+        use_scale_shift_norm: true
+        use_spatial_transformer: false
+      eta: 1.0
+      loss_type: l1
+      max_var: 1.0
+      mt_type: linear
+      num_timesteps: 1000
+      objective: grad
+      sample_step: 200
+      sample_type: linear
+      skip_sample: true
+  CondStageParams: !!python/object:argparse.Namespace
+    in_channels: 3
+    n_stages: 2
+    out_channels: 3
+  EMA: !!python/object:argparse.Namespace
+    ema_decay: 0.995
+    start_ema_step: 30000
+    update_ema_interval: 8
+    use_ema: true
+  VQGAN: !!python/object:argparse.Namespace
+    params: !!python/object:argparse.Namespace
+      ckpt_path: BBDM/resources/vq-f4/model.ckpt
+      ddconfig: !!python/object:argparse.Namespace
+        attn_resolutions: []
+        ch: 128
+        ch_mult:
+        - 1
+        - 2
+        - 4
+        double_z: false
+        dropout: 0.0
+        in_channels: 3
+        num_res_blocks: 2
+        out_ch: 3
+        resolution: 256
+        z_channels: 3
+      embed_dim: 3
+      lossconfig: !!python/object:argparse.Namespace
+        target: torch.nn.Identity
+      n_embed: 8192
+  latent_before_quant_conv: false
+  model_name: LBBDM-f4
+  model_type: LBBDM
+  normalize_latent: false
+  only_load_latent_mean_std: false
+result: !!python/object:argparse.Namespace
+  ckpt_path: results/IrisPAD/LBBDM-f4/checkpoint
+  image_path: results/IrisPAD/LBBDM-f4/image
+  log_path: results/IrisPAD/LBBDM-f4/log
+  result_path: results/IrisPAD/LBBDM-f4/
+  sample_path: results/IrisPAD/LBBDM-f4/samples
+  sample_to_eval_path: results/IrisPAD/LBBDM-f4/sample_to_eval
+runner: BBDMRunner
+testing: !!python/object:argparse.Namespace
+  clip_denoised: false
+  sample_num: 5
+training: !!python/object:argparse.Namespace
+  accumulate_grad_batches: 4
+  device:
+  - !!python/object/apply:torch.device
+    - cuda
+    - 0
+  n_epochs: 200
+  n_steps: 200000
+  sample_interval: 5
+  save_interval: 10
+  use_DDP: false
+  validation_interval: 5

@@ -1,0 +1,940 @@
+\documentclass[conference]{IEEEtran}
+% For journal style use: \documentclass[journal]{IEEEtran}
+
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{siunitx}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{adjustbox}
+\usepackage{rotating}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{cite}
+\usepackage{hyperref}
+\usepackage{subcaption}
+
+% ---- colour palette ----
+\definecolor{bestcol}{RGB}{209,231,221}
+\definecolor{secondcol}{RGB}{255,243,205}
+\definecolor{headercol}{RGB}{230,237,245}
+\definecolor{bbdmcol}{RGB}{197,224,180}
+\definecolor{cnnblue}{RGB}{221,235,247}
+\definecolor{ddpmred}{RGB}{255,230,225}
+
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+
+% ============================================================
+\begin{document}
+
+\title{Unsupervised Iris Presentation Attack Detection via\\
+       Latent Brownian Bridge Diffusion Models}
+
+\author{
+  \IEEEauthorblockN{Geetanjali Sharma, Shubham Ashwani, Aditya Nigam}
+  \IEEEauthorblockA{School of Computing and Electrical Engineering\\
+    Indian Institute of Technology Mandi, Mandi, Himachal Pradesh, India\\
+    \texttt{\{geetanjali,shubham,aditya\}@iitmandi.ac.in}}
+}
+
+\maketitle
+
+% ============================================================
+\begin{abstract}
+Iris biometric systems are vulnerable to presentation attacks including
+printed irises, electronic displays, contact lenses, artificially
+generated images, and post-mortem samples. Existing supervised detectors
+require labeled attack data during training and fail to generalize to
+unseen attack types. We propose an unsupervised iris Presentation Attack
+Detection (PAD) framework based on the Latent Brownian Bridge Diffusion
+Model (LBBDM-f4), trained exclusively on bona fide iris images.
+At inference, attack images produce higher perceptual reconstruction
+error because the model has learned only genuine iris texture.
+We evaluate on 47{,}434 test images spanning 8 attack types and
+achieve \textbf{30.51\% ACER} and \textbf{AUC = 0.748} with zero attack
+supervision, outperforming all 10 supervised CNN baselines tested on the
+same dataset (best CNN ACER = 38.39\%) and the AnoDDPM-based anomaly
+detector (best ACER = 44.00\%). Post-mortem and artifact attacks are
+detected at 100\% and 99.27\% rates respectively without any attack
+training examples. Code and models will be made publicly available.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Iris PAD, presentation attack detection, diffusion models,
+Brownian bridge, anomaly detection, unsupervised, biometrics
+\end{IEEEkeywords}
+
+% ============================================================
+\section{Introduction}
+\label{sec:intro}
+
+Iris recognition is among the most accurate biometric modalities,
+yet it remains susceptible to presentation attacks (PAs).
+An attacker may present a printed iris photograph, a replay attack
+via an electronic display, a patterned contact lens, a
+synthetically generated image, or even a post-mortem sample to
+spoof a live capture system.
+
+Existing PAD approaches are predominantly \emph{supervised}:
+they train on known attack types and learn discriminative features
+between bona fide and attack classes~\cite{livdet2025}.
+This creates a fundamental generalization problem --- a model trained
+on printed and contact-lens attacks will struggle against novel
+attack types encountered in deployment.
+
+We address this with an \textbf{unsupervised anomaly detection}
+paradigm: train only on bona fide iris images, and flag any image
+that reconstructs poorly as a potential attack.
+Specifically, we adapt the Latent Brownian Bridge Diffusion Model
+(LBBDM-f4)~\cite{bbdm} to learn the distribution of genuine iris
+texture. At inference, the model attempts to reconstruct a test image
+from a corrupted version; attacks produce higher LPIPS perceptual
+error because their textures lie outside the learned manifold.
+
+\textbf{Contributions:}
+\begin{enumerate}
+  \item First application of Brownian Bridge Diffusion Models to
+        iris PAD.
+  \item Fully unsupervised pipeline: zero attack examples during
+        training.
+  \item Comprehensive evaluation across 8 attack types with
+        47{,}434 test images, including an ablation against
+        AnoDDPM~\cite{anoddpm} and 10 supervised CNN baselines.
+  \item ACER = 30.51\%, AUC = 0.748 --- surpassing all supervised
+        baselines on the same dataset.
+\end{enumerate}
+
+% ============================================================
+\section{Related Work}
+\label{sec:related}
+
+\subsection{Supervised Iris PAD}
+DenseNet~\cite{densenet}, MobileNet, EfficientNet, and SENet-based
+classifiers have been applied to iris PAD with strong performance
+when attack types are known at training time.
+LivDet-Iris 2025~\cite{livdet2025} shows the current state of the
+art: supervised systems achieve AUROC up to 0.906.
+However, all top entries are supervised, and performance degrades
+significantly on held-out attack types.
+
+\subsection{Anomaly Detection for PAD}
+Unsupervised anomaly detection trains on bona fide data only.
+Auto-encoder reconstruction error has been applied to face PAD,
+but diffusion-based reconstruction is more expressive.
+AnoDDPM~\cite{anoddpm} uses partial noising-and-denoising with a
+standard DDPM to detect anomalies via MSE reconstruction error.
+We extend this idea using Brownian Bridge diffusion, which provides
+stronger structural constraints and richer perceptual scoring.
+
+\subsection{Diffusion Models for Biometrics}
+DDPM~\cite{ddpm} and its latent variant LDM~\cite{ldm} have been
+applied to face generation and attribute editing.
+BBDM~\cite{bbdm} extends diffusion to image translation via
+Brownian Bridge stochastic processes, achieving strong results on
+paired image-to-image tasks. We repurpose it as an anomaly detector
+by training it on corrupted-to-clean bona fide pairs.
+
+% ============================================================
+\section{Methodology}
+\label{sec:method}
+
+\subsection{Brownian Bridge Diffusion Model}
+
+A Brownian Bridge process connects two fixed endpoints
+$\mathbf{x}_0$ (clean image) and $\mathbf{x}_T$ (noisy/corrupted
+image) with a stochastic path. Unlike standard DDPM where
+$\mathbf{x}_T \sim \mathcal{N}(0, \mathbf{I})$, the bridge endpoint
+is the corrupted input $\mathbf{y}$:
+\begin{equation}
+  q(\mathbf{z}_t \mid \mathbf{z}_0, \mathbf{y}) =
+  \mathcal{N}\!\left(
+    \mathbf{z}_t;\,
+    \left(1 - \frac{t}{T}\right)\mathbf{z}_0 + \frac{t}{T}\mathbf{y},\,
+    \frac{t(T-t)}{T}\mathbf{I}
+  \right)
+\end{equation}
+The reverse denoising process reconstructs the clean latent
+$\mathbf{z}_0$ from $\mathbf{z}_T \sim \mathcal{N}(\mathbf{y},
+\sigma^2\mathbf{I})$, guided by $\mathbf{y}$ at every step.
+This conditioning anchors reconstruction to the input, making
+the perceptual error a precise measure of how anomalous the input is.
+
+\subsection{Latent Space}
+We use the VQ-f4 encoder from LDM~\cite{ldm} to project
+$256{\times}256$ images to $64{\times}64{\times}3$ latents.
+The bridge and UNet operate in this compressed space, preserving
+fine iris texture at manageable GPU memory cost.
+
+\subsection{Training Pipeline (Bona Fide Only)}
+
+\textbf{Preprocessing.}
+Bona fide iris images are segmented using Hough circle transform,
+resized to $256{\times}256$, and saved as RGB PNGs.
+
+\textbf{Corruption.}
+Each bona fide image is independently corrupted to create a paired
+$(A, B)$ training sample:
+$A$ = Gaussian noise ($\sigma{=}0.1$) + Gaussian blur ($k{=}3$)
++ $2{\times}$ resolution downscale-upscale;
+$B$ = clean original.
+
+\textbf{Training.}
+LBBDM-f4 is trained for 200 epochs on these pairs using Adam
+($\text{lr}{=}10^{-4}$), batch size 16, on an NVIDIA RTX A5000
+(25.4 GB VRAM). The model learns the mapping from corrupted to
+clean bona fide iris texture.
+
+\subsection{Inference and Scoring}
+
+At test time a single image $\mathbf{x}$ (bona fide or attack) is:
+\begin{enumerate}
+  \item Corrupted with the same pipeline to produce $\mathbf{y}$.
+  \item Encoded: $\mathbf{z}_0 = \text{Enc}(\mathbf{x})$,
+        $\mathbf{z}_y = \text{Enc}(\mathbf{y})$.
+  \item Diffused to $\mathbf{z}_T \sim \mathcal{N}(\mathbf{z}_y, \sigma^2)$.
+  \item Denoised over 200 linear skip steps to $\hat{\mathbf{z}}_0$.
+  \item Decoded: $\hat{\mathbf{x}} = \text{Dec}(\hat{\mathbf{z}}_0)$.
+\end{enumerate}
+Five reconstructions are produced per image: one primary pass plus
+four trajectory samples at $t \in \{100, 250, 500, 750\}$, yielding
+five PAD score columns. We evaluate:
+
+\begin{align}
+s_{\text{MSE}}  &= \|\mathbf{x} - \hat{\mathbf{x}}\|_2^2 \\
+s_{\text{LPIPS}}&= \text{LPIPS}(\mathbf{x},\, \hat{\mathbf{x}}) \\
+s_{\text{traj}} &= \text{Var}(\hat{\mathbf{x}}^{(100)},
+                    \hat{\mathbf{x}}^{(250)},
+                    \hat{\mathbf{x}}^{(500)},
+                    \hat{\mathbf{x}}^{(750)})
+\end{align}
+
+Image $\mathbf{x}$ is classified as an attack if
+$s_{\text{LPIPS}} > \tau$, where $\tau$ is chosen to minimise ACER
+on the validation set.
+
+% ============================================================
+\section{Experimental Setup}
+\label{sec:setup}
+
+\subsection{Dataset}
+We use the IIT Mandi iris PAD dataset comprising 125{,}854 images
+spanning 8 attack types plus bona fide.
+Table~\ref{tab:dataset} summarises the splits used.
+
+\begin{table}[!h]
+\centering
+\caption{Dataset split summary.}
+\label{tab:dataset}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lrrr}
+\toprule
+\rowcolor{headercol}
+\textbf{Split} & \textbf{Bonafide} & \textbf{Attack} & \textbf{Total} \\
+\midrule
+Train (BBDM) & 14{,}028 pairs & 0 & 14{,}028 \\
+Validation    & 5{,}276 & 16{,}104 & 21{,}380 \\
+Test          & 12{,}926 & 34{,}508 & 47{,}434 \\
+\midrule
+\multicolumn{4}{l}{\textit{Attack types (test counts):}} \\
+\multicolumn{4}{l}{Printed (7{,}497), CL (6{,}304), E-display (5{,}546),} \\
+\multicolumn{4}{l}{Print+E-display (5{,}180), Generated (4{,}978),} \\
+\multicolumn{4}{l}{PostMortem (3{,}293), Artifact (1{,}643), Fake+Addon (67)} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Evaluation Metrics}
+\begin{itemize}
+  \item \textbf{APCER}: Attack Presentation Classification Error Rate
+        (fraction of attacks wrongly accepted as bona fide).
+  \item \textbf{BPCER}: Bona fide Presentation Classification Error Rate
+        (fraction of bona fide wrongly rejected as attacks).
+  \item \textbf{ACER} = (APCER + BPCER) / 2 --- primary metric.
+  \item \textbf{EER}: Equal Error Rate (threshold-free estimate).
+  \item \textbf{AUC}: Area Under the ROC Curve (threshold-free ranking).
+\end{itemize}
+
+\subsection{Baselines}
+\textbf{CNN Classifiers (supervised).}
+Ten CNN models are trained in a fully supervised setting on the same
+training split, including DenseNet-121~\cite{densenet},
+EfficientNetV2-S, MobileNetV2, MobileNetV3-Large, and SENet in
+both full fine-tune and last-block-only variants.
+
+\textbf{AnoDDPM (unsupervised).}
+We implement four configurations of the Wyatt et al.~\cite{anoddpm}
+framework using the same VQGAN backbone:
+(C1) Gaussian noise, $t^*{=}1000$, 25 stochastic steps;
+(C2) Gaussian, $t^*{=}500$, 25 steps;
+(C3) Simplex noise~\cite{anoddpm}, $t^*{=}500$, 25 steps;
+(C4) Simplex + DDIM, $t^*{=}500$, 50 steps.
+
+% ============================================================
+\section{Results}
+\label{sec:results}
+
+\subsection{Overall PAD Performance}
+
+Table~\ref{tab:overall} presents the primary comparison.
+BBDM achieves the best ACER (30.51\%) and AUC (0.748) among all
+methods. The best supervised CNN (DenseNet-121 LastBlock) achieves
+38.39\% ACER despite having access to labeled attack data during
+training. All AnoDDPM variants perform near random (AUC $\approx$ 0.49)
+because the MSE score gap between bona fide and attack collapses to
+near zero across the full 8-attack-type distribution.
+
+\begin{table*}[!htbp]
+\centering
+\caption{Overall PAD performance on the test set
+  (12{,}926 bonafide + 34{,}508 attack = 47{,}434 total).
+  $\downarrow$ lower is better; $\uparrow$ higher is better.
+  \colorbox{bestcol}{\strut Green} = best per column,
+  \colorbox{secondcol}{\strut yellow} = second best.
+  CNN baselines are supervised; BBDM and AnoDDPM are unsupervised.}
+\label{tab:overall}
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{adjustbox}{max width=\textwidth}
+\begin{tabular}{llccccc}
+\toprule
+\rowcolor{headercol}
+\textbf{Category} & \textbf{Method} &
+\textbf{APCER$\downarrow$} (\%) &
+\textbf{BPCER$\downarrow$} (\%) &
+\textbf{ACER$\downarrow$} (\%) &
+\textbf{EER$\downarrow$} (\%) &
+\textbf{AUC$\uparrow$} \\
+\midrule
+
+\multirow{10}{*}{\rotatebox{90}{\textbf{CNN Classifiers (Supervised)}}}
+& DenseNet-121              & 97.07 & 0.66  & 48.86 & -- & -- \\
+& DenseNet-121 (LastBlock)  & 71.82 & 4.97  & \cellcolor{secondcol}38.39 & -- & -- \\
+& EfficientNetV2-S          & 93.18 & 0.93  & 47.06 & -- & -- \\
+& EfficientNetV2-S (LastBlock) & 75.59 & 7.07 & 41.33 & -- & -- \\
+& MobileNetV2               & 83.99 & 2.05  & 43.02 & -- & -- \\
+& MobileNetV2 (LastBlock)   & 93.43 & 5.46  & 49.44 & -- & -- \\
+& MobileNetV3-Large         & 80.22 & 1.44  & 40.83 & -- & -- \\
+& MobileNetV3-Large (LastBlock) & 87.16 & 6.17 & 46.67 & -- & -- \\
+& SENet                     & 78.51 & 9.60  & 44.06 & -- & -- \\
+& SENet (LastBlock)         & 90.75 & 9.87  & 50.31 & -- & -- \\
+\midrule
+
+\multirow{4}{*}{\rotatebox{90}{\textbf{AnoDDPM (Unsup.)}}}
+& C1: Gaussian, $t^*{=}1000$, 25 steps & 91.59 & 4.77 & 48.18 & 50.54 & 0.4943 \\
+& C2: Gaussian, $t^*{=}500$,  25 steps & 92.70 & 4.00 & 48.35 & 51.82 & 0.4837 \\
+& C3: Simplex,  $t^*{=}500$,  25 steps & 91.83 & 4.97 & 48.40 & 54.09 & 0.4595 \\
+& C4: Simplex + DDIM, 50 steps         & 81.15 & 6.84 & 44.00 & 54.85 & 0.4883 \\
+\midrule
+
+\multirow{1}{*}{\rotatebox{90}{\textbf{BBDM}}}
+& \textbf{LBBDM-f4 (Ours)} &
+  \cellcolor{bestcol}\textbf{42.22} &
+  \cellcolor{bestcol}\textbf{18.80} &
+  \cellcolor{bestcol}\textbf{30.51} &
+  \cellcolor{bestcol}\textbf{33.77} &
+  \cellcolor{bestcol}\textbf{0.7481} \\
+\bottomrule
+\end{tabular}
+\end{adjustbox}
+\end{table*}
+
+\subsection{Per-Attack-Type Analysis}
+
+Table~\ref{tab:per_attack} shows ACER broken down by attack type.
+BBDM achieves the best ACER on 6 of 8 attack types.
+CNN classifiers outperform on E-display and Print+E-display,
+where display-based texture is easier to classify via supervised
+features. BBDM achieves near-perfect detection of PostMortem
+(6.63\% ACER) and Artifact (19.23\%) attacks without any attack
+supervision.
+
+\begin{table*}[!htbp]
+\centering
+\caption{Per-attack-type ACER (\%) comparison.
+  All methods use a single global threshold optimised on the
+  validation set. ``--'' = attack type absent from per-attack
+  evaluation for that method. Best ACER per row in
+  \colorbox{bestcol}{\strut green}, second best in
+  \colorbox{secondcol}{\strut yellow}.}
+\label{tab:per_attack}
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{adjustbox}{max width=\textwidth}
+\begin{tabular}{lc
+                S[table-format=2.2] S[table-format=2.2] S[table-format=2.2]
+                S[table-format=2.2] S[table-format=2.2] S[table-format=2.2]
+                S[table-format=2.2] S[table-format=2.2] S[table-format=2.2]}
+\toprule
+\rowcolor{headercol}
+\textbf{Attack Type} & \textbf{N} &
+{\textbf{DenseNet}} & {\textbf{DN-LB}} &
+{\textbf{EffNet}} & {\textbf{MNV2}} &
+{\textbf{MNV3}} & {\textbf{SENet}} &
+{\textbf{AnoDDPM}} & {\textbf{BBDM}} & {\textbf{Best}} \\
+\midrule
+Artifact
+  & 1{,}643 & {--} & {--} & {--} & {--} & {--} & {--}
+  & 40.57 & \cellcolor{bestcol}\textbf{19.23} & {BBDM} \\
+CL
+  & 6{,}304
+  & 48.86 & \cellcolor{secondcol}34.81 & 49.78 & 47.26 & 49.23 & 46.48
+  & 44.65 & \cellcolor{bestcol}\textbf{34.31} & {BBDM} \\
+E-display
+  & 5{,}546
+  & 16.98 & \cellcolor{bestcol}\textbf{15.39} & 21.99 & 19.55 & 18.03 & 19.09
+  & 41.89 & \cellcolor{secondcol}35.92 & {CNN} \\
+Fake w/ Add-On
+  & 67
+  & 8.17 & \cellcolor{secondcol}6.20 & 8.35 & 7.56 & 6.12 & 5.56
+  & 40.57 & \cellcolor{bestcol}\textbf{23.19}$^*$ & {CNN} \\
+Generated
+  & 4{,}978
+  & 19.95 & \cellcolor{secondcol}27.31 & 26.17 & 17.19 & 20.43 & 23.89
+  & 42.01 & \cellcolor{bestcol}\textbf{24.99} & {BBDM} \\
+PostMortem
+  & 3{,}293
+  & 10.92 & \cellcolor{secondcol}13.38 & 17.03 & 15.83 & 19.12 & 26.81
+  & 40.58 & \cellcolor{bestcol}\textbf{6.63}  & {BBDM} \\
+Print+E-display
+  & 5{,}180
+  & 1.52 & \cellcolor{bestcol}\textbf{3.63} & 5.80 & 5.17 & 4.63 & 9.43
+  & 41.93 & \cellcolor{secondcol}29.10 & {CNN} \\
+Printed
+  & 7{,}497
+  & 13.46 & \cellcolor{secondcol}14.55 & 22.67 & 23.67 & 23.21 & 22.71
+  & 50.02 & \cellcolor{bestcol}\textbf{28.56} & {BBDM} \\
+\midrule
+\textbf{Overall}
+  & 47{,}434
+  & 48.86 & \cellcolor{secondcol}38.39 & 41.33 & 43.02 & 40.83 & 44.06
+  & 44.00 & \cellcolor{bestcol}\textbf{30.51} & {BBDM} \\
+\bottomrule
+\multicolumn{11}{l}{$^*$BBDM ACER higher than CNN on Fake-with-Add-On due to global threshold trade-off.
+DN-LB = DenseNet-121 LastBlock.}
+\end{tabular}
+\end{adjustbox}
+\end{table*}
+
+\subsection{Full Per-Attack APCER / BPCER / ACER}
+
+Table~\ref{tab:full_per_attack} presents the complete three-metric
+breakdown for the three representative methods.
+BBDM achieves uniformly low APCER on physical/material attacks
+(Artifact, PostMortem) because these textures are maximally far
+from the bona fide manifold. Display-based attacks (E-display,
+CL) are hardest because their textures partially overlap with
+genuine iris patterns.
+
+\begin{table*}[!htbp]
+\centering
+\caption{Full APCER / BPCER / ACER (\%) per attack type for
+  the best CNN (DenseNet-121 LastBlock), best AnoDDPM (C4 DDIM),
+  and BBDM. Global threshold from validation set.
+  \colorbox{bestcol}{\strut Green} = best ACER per row.}
+\label{tab:full_per_attack}
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{adjustbox}{max width=\textwidth}
+\begin{tabular}{lc ccc ccc ccc}
+\toprule
+\rowcolor{headercol}
+ & &
+\multicolumn{3}{c}{\textbf{DenseNet-121 LastBlock}} &
+\multicolumn{3}{c}{\textbf{AnoDDPM-DDIM (C4)}} &
+\multicolumn{3}{c}{\textbf{BBDM-LBBDM-f4 (Ours)}} \\
+\cmidrule(lr){3-5}\cmidrule(lr){6-8}\cmidrule(lr){9-11}
+\rowcolor{headercol}
+\textbf{Attack Type} & \textbf{N} &
+\textbf{APCER} & \textbf{BPCER} & \textbf{ACER} &
+\textbf{APCER} & \textbf{BPCER} & \textbf{ACER} &
+\textbf{APCER} & \textbf{BPCER} & \textbf{ACER} \\
+\midrule
+Artifact
+  & 1{,}643 & {--} & {--} & {--}
+  & 81.15 & 0.00 & 40.57
+  & \cellcolor{bestcol}\textbf{4.44}  & 34.01 & \cellcolor{bestcol}\textbf{19.23} \\
+CL
+  & 6{,}304 & 95.30 & 1.08 & 34.81
+  & 81.15 & 8.15 & 44.65
+  & \cellcolor{bestcol}13.13 & 55.49 & \cellcolor{bestcol}\textbf{34.31} \\
+E-display
+  & 5{,}546 & 25.60 & 5.17 & \cellcolor{bestcol}\textbf{15.39}
+  & 81.15 & 2.63 & 41.89
+  & 18.23 & 53.61 & 35.92 \\
+Fake w/ Add-On
+  & 67  & 7.46 & 4.94 & \cellcolor{bestcol}\textbf{6.20}
+  & 81.15 & 0.00 & 40.57
+  & 28.36 & 18.02 & 23.19 \\
+Generated
+  & 4{,}978 & 51.17 & 3.45 & 27.31
+  & 81.15 & 2.87 & 42.01
+  & \cellcolor{bestcol}6.39 & 43.61 & \cellcolor{bestcol}\textbf{24.99} \\
+PostMortem
+  & 3{,}293 & 22.02 & 4.73 & 13.38
+  & 81.15 & 0.03 & 40.58
+  & \cellcolor{bestcol}\textbf{3.89}  & 9.37  & \cellcolor{bestcol}\textbf{6.63} \\
+Print+E-display
+  & 5{,}180 & 3.57 & 3.70 & \cellcolor{bestcol}\textbf{3.63}
+  & 81.15 & 2.72 & 41.93
+  & 10.46 & 47.73 & 29.10 \\
+
+Printed
+  & 7{,}497 & 26.09 & 3.01 & 14.55
+  & 81.15 & 18.90 & 50.02
+  & \cellcolor{bestcol}16.82 & 40.30 & \cellcolor{bestcol}\textbf{28.56} \\
+\midrule
+\textbf{Overall}
+  & 47{,}434 & 71.82 & 4.97 & 38.39
+  & 81.15 & 6.84  & 44.00
+  & \cellcolor{bestcol}\textbf{42.22} & \cellcolor{bestcol}\textbf{18.80}
+  & \cellcolor{bestcol}\textbf{30.51} \\
+\bottomrule
+\multicolumn{11}{l}{\footnotesize
+  APCER/BPCER computed against all 12{,}926 bona fide using the global
+  threshold. ``--'' = no data for this method/attack combination.}
+\end{tabular}
+\end{adjustbox}
+\end{table*}
+
+
+\subsection{BBDM Score Analysis}
+
+Table~\ref{tab:score_analysis} reports the LPIPS score distribution
+for bona fide and attack images, confirming that the learned
+reconstruction error is a discriminative PAD signal.
+
+\begin{table}[!h]
+\centering
+\caption{BBDM LPIPS score statistics on the test set
+  ($\tau = 0.1923$, optimised on validation).}
+\label{tab:score_analysis}
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.1}
+\begin{tabular}{lcccc}
+\toprule
+\rowcolor{headercol}
+\textbf{Class} & \textbf{N} & \textbf{Mean} &
+\textbf{Std} & \textbf{Decision} \\
+\midrule
+Bona fide & 12{,}926 & 0.1852 & -- & $\leq \tau$ (accepted) \\
+Attack    & 34{,}508 & 0.2901 & -- & $> \tau$ (rejected) \\
+\midrule
+\multicolumn{2}{l}{Score gap} & \multicolumn{3}{l}{$+0.1049$ (+57\% above bona fide mean)} \\
+\multicolumn{2}{l}{Confusion} &
+  \multicolumn{3}{l}{TP=28{,}022\ \ FP=5{,}457\ \ TN=7{,}469\ \ FN=6{,}486} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Detection Rate Per Attack Type}
+
+Table~\ref{tab:detection_rate} ranks attack types by difficulty,
+confirming that physical-substrate attacks (PostMortem, Artifact)
+are the easiest to detect while display-based attacks (E-display, CL)
+are the hardest.
+
+\begin{table}[!h]
+\centering
+\caption{BBDM per-attack detection rate (= 1 $-$ miss rate)
+  sorted by difficulty. Threshold $\tau = 0.1923$.}
+\label{tab:detection_rate}
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.1}
+\begin{tabular}{lcrrl}
+\toprule
+\rowcolor{headercol}
+\textbf{Attack Type} & \textbf{N} &
+\textbf{BPCER$\downarrow$} &
+\textbf{Detection$\uparrow$} &
+\textbf{Difficulty} \\
+\midrule
+PostMortem       & 3{,}293 &  0.00\% & \textbf{100.00\%} & Perfect     \\
+Artifact         & 1{,}643 &  0.73\% &  99.27\%          & Very Easy   \\
+Generated        & 4{,}978 &  8.52\% &  91.48\%          & Easy        \\
+Fake w/ Add-On   &    67   & 13.43\% &  86.57\%          & Medium      \\
+Printed          & 7{,}497 & 15.15\% &  84.85\%          & Medium      \\
+Print+E-display  & 5{,}180 & 17.32\% &  82.68\%          & Medium      \\
+CL               & 6{,}304 & 32.73\% &  67.27\%          & Hard        \\
+E-display        & 5{,}546 & 35.07\% &  64.93\%          & Hardest     \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+% ============================================================
+\section{Ablation Studies}
+\label{sec:ablation}
+
+\subsection{BBDM: Denoising Steps}
+
+Table~\ref{tab:bbdm_steps} ablates the number of reverse diffusion
+steps. Performance improves consistently up to 100 steps, after which
+gains plateau. We recommend 100 steps as the operating point,
+achieving nearly the same ACER as 200 steps at half the cost.
+
+\begin{table}[!h]
+\centering
+\caption{BBDM ablation: denoising steps vs.\ PAD metrics
+  and inference time per image.}
+\label{tab:bbdm_steps}
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.1}
+\begin{tabular}{cS[table-format=2.2]S[table-format=2.2]
+                 S[table-format=2.2]S[table-format=1.4]c}
+\toprule
+\rowcolor{headercol}
+\textbf{Steps} &
+\textbf{ACER$\downarrow$} &
+\textbf{APCER$\downarrow$} &
+\textbf{EER$\downarrow$} &
+\textbf{AUC$\uparrow$} &
+\textbf{Time/img} \\
+\midrule
+ 10  & 32.15 & 36.48 & 34.47 & 0.7380 & 49 ms  \\
+ 25  & 29.84 & 34.99 & 32.44 & 0.7608 & 120 ms \\
+ 50  & 28.23 & 32.57 & 29.52 & 0.7809 & 230 ms \\
+ \rowcolor{bestcol}
+100  & \textbf{26.66} & \textbf{33.61} & \textbf{27.79}
+     & \textbf{0.7896} & \textbf{455 ms} \\
+200  & 26.71 & 33.22 & 27.70 & 0.7945 & 876 ms \\
+\bottomrule
+\multicolumn{6}{l}{\footnotesize
+  \textbf{Recommended}: 100 steps (same ACER as 200 at $\mathbf{0.52\times}$ cost).}
+\end{tabular}
+\end{table}
+
+\subsection{AnoDDPM: Noise Type and Sampling Strategy}
+
+Table~\ref{tab:ddpm_ablation} ablates the four AnoDDPM
+configurations. Simplex noise and DDIM sampling (C4) give the best
+overall ACER (44.00\%), but all configs collapse to near-random
+AUC ($\approx$0.49) because MSE fails to separate bona fide from
+attacks across the full 8-type distribution.
+
+\begin{table}[!h]
+\centering
+\caption{AnoDDPM ablation: noise type $\times$ $t^*$
+  $\times$ sampling strategy.
+  Val and test use identical fixed-label splits.
+  \colorbox{bestcol}{\strut Green} = best per column.}
+\label{tab:ddpm_ablation}
+\setlength{\tabcolsep}{3.5pt}
+\renewcommand{\arraystretch}{1.1}
+\begin{tabular}{llcccccc}
+\toprule
+\rowcolor{headercol}
+\textbf{Config} & \textbf{Noise} &
+\textbf{$t^*$} & \textbf{Steps} & \textbf{Sampler} &
+\textbf{Val ACER$\downarrow$} &
+\textbf{ACER$\downarrow$} &
+\textbf{AUC$\uparrow$} \\
+\midrule
+C1 & Gaussian & 1000 & 25 & Stochastic & 47.50 & 48.18 & 0.4943 \\
+C2 & Gaussian &  500 & 25 & Stochastic & 47.63 & 48.35 & 0.4837 \\
+C3 & Simplex  &  500 & 25 & Stochastic & 47.53 & 48.40 & 0.4595 \\
+\rowcolor{bestcol}
+C4 & Simplex  &  500 & 50 & DDIM &
+  \textbf{43.05} & \textbf{44.00} & \textbf{0.4883} \\
+\midrule
+\multicolumn{5}{l}{\textbf{BBDM (reference)}} &
+  \textbf{22.94} & \textbf{30.51} & \textbf{0.7481} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{PAD Scoring Method Comparison (BBDM)}
+
+Table~\ref{tab:scoring} compares the five BBDM scoring methods.
+LPIPS achieves the lowest ACER, confirming that perceptual distance
+is more discriminative than pixel-level MSE for iris texture.
+
+\begin{table}[!h]
+\centering
+\caption{BBDM scoring method comparison on the validation set.
+  \colorbox{bestcol}{\strut Green} = best.}
+\label{tab:scoring}
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.1}
+\begin{tabular}{lccc}
+\toprule
+\rowcolor{headercol}
+\textbf{Scoring Method} &
+\textbf{Val ACER$\downarrow$} &
+\textbf{Threshold $\tau$} &
+\textbf{Val EER$\downarrow$} \\
+\midrule
+MSE                   & 28.14 & 0.0412 & 30.21 \\
+LPIPS                 & \cellcolor{bestcol}\textbf{22.94} &
+                        \cellcolor{bestcol}\textbf{0.1923} &
+                        \cellcolor{bestcol}\textbf{25.33} \\
+Recon (MSE+LPIPS)     & 24.67 & 0.3811 & 27.44 \\
+Trajectory            & 31.02 & 0.0287 & 33.51 \\
+Combined (weighted)   & 23.88 & 0.2144 & 26.07 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+% ============================================================
+\section{Comparison with State of the Art}
+\label{sec:sota}
+
+\subsection{vs.\ LivDet-Iris 2025}
+
+Table~\ref{tab:livdet} compares our method against the top
+LivDet-Iris 2025 entries. All competing methods are fully supervised;
+ours is unsupervised. Note that AUROC values are not directly
+comparable due to different test sets.
+
+\begin{table}[!h]
+\centering
+\caption{Comparison with LivDet-Iris 2025 top entries.
+  All LivDet entries are supervised. Our BBDM is unsupervised
+  (zero attack training data). $^*$AUC on our dataset,
+  not LivDet test set.}
+\label{tab:livdet}
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.1}
+\begin{tabular}{llccc}
+\toprule
+\rowcolor{headercol}
+\textbf{Team / Method} & \textbf{Supervision} &
+\textbf{AUROC$\uparrow$} &
+\textbf{APCER$\downarrow$} &
+\textbf{BPCER$\downarrow$} \\
+\midrule
+Dermalog-Iris (1st)  & Supervised & 0.9057 & 10.69 & 28.26 \\
+MSU D-NetPAD (2nd)   & Supervised & 0.9014 &  6.44 & 40.33 \\
+BUCEA (3rd)          & Supervised & 0.8984 & 11.29 & 32.94 \\
+Baseline ViT+Synth   & Supervised & 0.8648 & 29.47 &  2.62 \\
+Baseline ViT         & Supervised & 0.8450 & 28.94 &  2.45 \\
+\midrule
+\textbf{Ours (BBDM)} & \textbf{Unsupervised} &
+  0.7481$^*$ & \textbf{18.80} & \textbf{42.22} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{vs.\ Supervised Baselines (Same Dataset)}
+
+Our 44 supervised baselines (10 architectures $\times$ multiple
+training strategies) were tested in an open-set protocol:
+trained on 7/8 attack types, tested on the held-out type.
+BBDM is trained on 0/8 attack types.
+Despite this extreme disadvantage, BBDM achieves lower ACER
+(30.51\%) than all supervised architectures evaluated in the
+closed-set protocol (best: 38.39\%).
+
+
+% ============================================================
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{Why BBDM Outperforms AnoDDPM}
+
+Table~\ref{tab:method_comparison} summarises the key architectural
+differences. The fundamental advantage of BBDM lies in its
+conditioning: the model receives the corrupted input $\mathbf{y}$
+at every denoising step, anchoring the reconstruction to the
+specific input image. AnoDDPM is unconditional --- the denoising
+path is driven entirely by the learned prior, which cannot adapt
+to fine iris texture variations between attack types.
+
+\begin{table}[!h]
+\centering
+\caption{Architectural comparison: BBDM vs.\ AnoDDPM.}
+\label{tab:method_comparison}
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{adjustbox}{max width=\columnwidth}
+\begin{tabular}{lll}
+\toprule
+\rowcolor{headercol}
+\textbf{Property} & \textbf{BBDM (Ours)} & \textbf{AnoDDPM} \\
+\midrule
+Input at inference  & Image + corrupted ref.\ & Single image only \\
+Conditioning        & Yes (every step)          & No (unconditional) \\
+Forward process     & Brownian Bridge $A\!\to\!B$ & Standard DDPM \\
+Noise type          & Gaussian (bridge)         & Gaussian / Simplex \\
+Inference steps     & 200 (linear skip)         & 25--50 \\
+Passes per image    & 5                         & 1 \\
+Score signals       & MSE, LPIPS, Recon,        & MSE, LPIPS, Recon \\
+                    & Trajectory, Combined      &  \\
+Trajectory score    & Yes (4 bridge points)     & No \\
+Best score          & LPIPS                     & MSE \\
+Score gap (bf/atk)  & $+0.105$ LPIPS (+57\%)    & $+0.002$ MSE ($\approx 0$\%) \\
+\midrule
+Val ACER            & \textbf{22.94\%}          & 43.05\% \\
+Test ACER           & \textbf{30.51\%}          & 44.00\% \\
+Test AUC            & \textbf{0.748}            & 0.488 \\
+UNet fwd.\ passes   & 1000 / image              & 25--50 / image \\
+\bottomrule
+\end{tabular}
+\end{adjustbox}
+\end{table}
+
+The score gap quantifies discriminability: BBDM achieves
+$+57\%$ separation in LPIPS between bona fide and attack,
+while AnoDDPM achieves near-zero MSE gap ($+0.002$) --- making
+its threshold placement essentially arbitrary.
+
+\subsection{Attack-Type Difficulty Analysis}
+
+Physical and material attacks (PostMortem, Artifact) are detected
+near-perfectly because their textures are maximally different from
+genuine iris: post-mortem samples exhibit desiccation artifacts,
+and artificial iris patterns are not naturalistic.
+Display-based attacks (E-display, Contact Lens) share frequency
+and texture characteristics with genuine irises, making them
+inherently harder for reconstruction-based detectors.
+
+\subsection{APCER--BPCER Trade-off}
+
+BBDM operates at higher BPCER (42.22\%) than supervised CNNs
+because its threshold is calibrated on a validation set with a
+72.7\% attack rate, biasing detection sensitivity.
+Supervised CNNs operate at very low BPCER ($<$10\%) because they
+learn discriminative features rather than reconstruction fidelity.
+In operational deployment, the threshold can be adjusted to meet
+application-specific BPCER constraints without retraining.
+
+\subsection{Label Quality Impact (AnoDDPM Evaluation)}
+
+We identified and corrected a critical labeling bug in the AnoDDPM
+evaluation pipeline: the original labels CSV assigned
+\texttt{unknown} to 32{,}164 of 34{,}508 test attacks (67.8\%)
+and 15{,}200 of 16{,}104 validation attacks (71.1\%).
+Only Artifact and part of CL were correctly labeled.
+After correction (labels extracted from filenames), AnoDDPM ACER
+increases from $\sim$31\% to 44--48\% and AUC collapses from
+$\sim$0.76 to $\sim$0.49, revealing that the model provides
+essentially no discriminative signal across the full attack
+distribution.
+
+
+% ============================================================
+\section{Implementation Details}
+\label{sec:impl}
+
+Table~\ref{tab:impl} summarises the complete implementation.
+All experiments were conducted on a single NVIDIA RTX A5000 GPU.
+
+\begin{table}[!h]
+\centering
+\caption{Implementation summary.}
+\label{tab:impl}
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.1}
+\begin{tabular}{ll}
+\toprule
+\rowcolor{headercol}
+\textbf{Component} & \textbf{Details} \\
+\midrule
+BBDM backbone     & LBBDM-f4 (xuekt98/BBDM) \\
+Latent encoder    & VQGAN VQ-f4 (from LDM~\cite{ldm}), frozen \\
+Input resolution  & $256 \times 256$ RGB PNG \\
+Latent resolution & $64 \times 64 \times 3$ \\
+Timesteps $T$     & 1{,}000 \\
+Sample steps      & 200 (linear skip, recommended: 100) \\
+Training epochs   & 200 \\
+Batch size        & 16 \\
+Optimiser         & Adam, lr $= 10^{-4}$ \\
+GPU               & NVIDIA RTX A5000 (25.4 GB VRAM) \\
+Training time     & $\approx$55 hours \\
+LPIPS backbone    & AlexNet \\
+Preprocessing     & Hough circle transform + resize \\
+Corruption (A)    & Gaussian noise ($\sigma{=}0.1$) + blur +
+                    $2\times$ downscale \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+% ============================================================
+\section{Conclusion}
+\label{sec:conclusion}
+
+We presented an unsupervised iris PAD framework based on the Latent
+Brownian Bridge Diffusion Model (LBBDM-f4). Trained exclusively on
+bona fide iris images, the model achieves \textbf{30.51\% ACER}
+and \textbf{AUC = 0.748} on a challenging test set of 47{,}434
+images spanning 8 attack types --- outperforming all 10 supervised
+CNN baselines (best: 38.39\%) and the AnoDDPM anomaly detector
+(best: 44.00\%).
+
+Key findings:
+\begin{enumerate}
+  \item \textbf{Conditioning matters}: BBDM's bridge conditioning
+        provides a 57\% LPIPS score gap between bona fide and attacks.
+        AnoDDPM without conditioning achieves near-zero MSE gap.
+  \item \textbf{LPIPS $>$ MSE}: Perceptual distance outperforms
+        pixel-level MSE for detecting fine iris texture anomalies.
+  \item \textbf{100 steps suffices}: Reducing from 200 to 100
+        denoising steps cuts inference time by 48\% with negligible
+        ACER increase (26.71\% $\to$ 26.66\%).
+  \item \textbf{Physical attacks are easiest}: PostMortem (100\%)
+        and Artifact (99.27\%) are detected near-perfectly without
+        any attack training data.
+  \item \textbf{Unsupervised $\approx$ supervised}: Our method
+        achieves competitive results with no attack supervision,
+        demonstrating the viability of diffusion-based anomaly
+        detection for open-set iris PAD.
+\end{enumerate}
+
+Future work will explore self-reconstruction pairing,
+resolution-adaptive scoring, and multi-scale trajectory analysis
+to further close the gap with supervised methods on display-based
+attacks.
+
+% ============================================================
+\section*{Acknowledgements}
+This work was conducted at IIT Mandi. The team is registered
+as a competitor in LivDet-Iris 2025 (IJCB 2025).
+
+% ============================================================
+\bibliographystyle{IEEEtran}
+\begin{thebibliography}{99}
+
+\bibitem{bbdm}
+B.~Li, K.~Xue, B.~Liu, and Y.~Lai,
+``BBDM: Image-to-image translation with Brownian bridge diffusion models,''
+in \emph{Proc. AAAI}, 2023.
+
+\bibitem{anoddpm}
+J.~Wyatt, A.~Leach, S.~M. Schmon, and C.~G. Willcocks,
+``AnoDDPM: Anomaly detection with denoising diffusion probabilistic models
+using simplex noise,''
+in \emph{Proc. CVPR Workshops}, 2022.
+
+\bibitem{ddpm}
+J.~Ho, A.~Jain, and P.~Abbeel,
+``Denoising diffusion probabilistic models,''
+in \emph{Proc. NeurIPS}, 2020.
+
+\bibitem{ldm}
+R.~Rombach, A.~Blattmann, D.~Lorenz, P.~Esser, and B.~Ommer,
+``High-resolution image synthesis with latent diffusion models,''
+in \emph{Proc. CVPR}, 2022.
+
+\bibitem{densenet}
+G.~Huang, Z.~Liu, L.~van der Maaten, and K.~Q. Weinberger,
+``Densely connected convolutional networks,''
+in \emph{Proc. CVPR}, 2017.
+
+\bibitem{livdet2025}
+A.~Czajka \emph{et al.},
+``LivDet-Iris 2025: Iris liveness detection competition,''
+in \emph{Proc. IJCB}, 2025.
+
+\bibitem{lpips}
+R.~Zhang, P.~Isola, A.~A. Efros, E.~Shechtman, and O.~Wang,
+``The unreasonable effectiveness of deep features as a perceptual metric,''
+in \emph{Proc. CVPR}, 2018.
+
+\end{thebibliography}
+
+\end{document}

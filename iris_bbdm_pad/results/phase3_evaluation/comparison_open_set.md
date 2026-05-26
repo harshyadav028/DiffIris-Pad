@@ -1,0 +1,17 @@
+# Table 4: Comparison vs Open-Set Supervised Baselines (Same Dataset)
+
+Supervised models trained on 7 of 8 attack types; tested on all 8 (open-set).
+Our BBDM trained on bona fide only — zero attack supervision.
+
+| Model | Type | Training_Attack_Types | Overall_ACER% | APCER% | BPCER% | Accuracy% |
+| ----- | ---- | --------------------- | ------------- | ------ | ------ | --------- |
+| DenseNet121_LastBlock | Supervised Open-Set | 7/8 attack types | 38.39 | 71.82 | 4.97 | 88.26 |
+| MobileNetV3LargeModel | Supervised Open-Set | 7/8 attack types | 40.83 | 80.22 | 1.44 | 89.72 |
+| EfficientNetV2SModel_LastBlock | Supervised Open-Set | 7/8 attack types | 41.33 | 75.59 | 7.07 | 88.37 |
+| MobileNetV2Model | Supervised Open-Set | 7/8 attack types | 43.02 | 83.99 | 2.05 | 88.90 |
+| SENetModel | Supervised Open-Set | 7/8 attack types | 44.06 | 78.51 | 9.60 | 88.72 |
+| MobileNetV3LargeModel_LastBlock | Supervised Open-Set | 7/8 attack types | 46.67 | 87.16 | 6.17 | 86.73 |
+| EfficientNetV2SModel | Supervised Open-Set | 7/8 attack types | 47.06 | 93.18 | 0.93 | 88.56 |
+| MobileNetV2Model_LastBlock | Supervised Open-Set | 7/8 attack types | 49.44 | 93.43 | 5.46 | 87.01 |
+| SENetModel_LastBlock | Supervised Open-Set | 7/8 attack types | 50.31 | 90.75 | 9.87 | 88.72 |
+| **BBDM (Ours)** | Unsupervised (BBDM) | 0/8 attack types | 26.49 | 33.04 | 19.93 | N/A |

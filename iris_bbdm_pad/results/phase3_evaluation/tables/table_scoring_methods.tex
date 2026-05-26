@@ -1,0 +1,16 @@
+\begin{table}[htbp]
+  \centering
+  \caption{Comparison of PAD Scoring Methods (bold = best ACER)}
+  \label{tab:scoring_methods}
+  \begin{tabular}{lrrrrr}
+    \toprule
+    Method & ACER\% & APCER\% & BPCER\% & EER\% & AUC \\
+    \midrule
+    mse\\_score & 44.08\\% & 71.71\\% & 16.44\\% & 43.81\\% & 0.6161 \\
+    lpips\\_score & 30.51\\% & 18.80\\% & 42.22\\% & 33.77\\% & 0.7481 \\
+    \textbf\{recon\\_score\} & \textbf\{30.41\\%\} & \textbf\{15.65\\%\} & \textbf\{45.17\\%\} & \textbf\{33.92\\%\} & \textbf\{0.7408\} \\
+    trajectory\\_score & 50.76\\% & 90.65\\% & 10.88\\% & 53.74\\% & 0.4457 \\
+    combined\\_score & 52.07\\% & 84.96\\% & 19.17\\% & 50.46\\% & 0.4970 \\
+    \bottomrule
+  \end{tabular}
+\end{table}

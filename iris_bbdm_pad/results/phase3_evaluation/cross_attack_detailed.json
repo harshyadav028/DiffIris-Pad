@@ -1,0 +1,121 @@
+{
+  "best_method": "lpips_score",
+  "threshold": 0.19225302727909777,
+  "bonafide_stats": {
+    "n_samples": 12926,
+    "mean": 0.18520841152530723,
+    "std": 0.09507269318508592,
+    "min": 0.0153811257332563,
+    "max": 0.5805572271347046,
+    "median": 0.17301704734563828
+  },
+  "overall_score_separation": 0.8491230799434389,
+  "per_attack": [
+    {
+      "attack_type": "E-display",
+      "n_samples": 5546,
+      "apcer": 0.35070320952037504,
+      "detection_rate": 0.649296790479625,
+      "mean_score": 0.2400858830358313,
+      "std_score": 0.11403583437017632,
+      "min_score": 0.0739981085062027,
+      "max_score": 1.1734142303466797,
+      "median_score": 0.2152125090360641,
+      "score_separation": 0.5425896619626593,
+      "difficulty_rank": 1
+    },
+    {
+      "attack_type": "CL",
+      "n_samples": 6304,
+      "apcer": 0.32725253807106597,
+      "detection_rate": 0.672747461928934,
+      "mean_score": 0.22649342889441318,
+      "std_score": 0.06328150353791578,
+      "min_score": 0.0577797554433345,
+      "max_score": 0.6961424946784973,
+      "median_score": 0.21768410503864283,
+      "score_separation": 0.48029973027830675,
+      "difficulty_rank": 2
+    },
+    {
+      "attack_type": "Print and E-display",
+      "n_samples": 5180,
+      "apcer": 0.17316602316602317,
+      "detection_rate": 0.8268339768339769,
+      "mean_score": 0.25050874169354964,
+      "std_score": 0.06452594227352924,
+      "min_score": 0.0990020930767059,
+      "max_score": 0.6026194095611572,
+      "median_score": 0.2440117448568344,
+      "score_separation": 0.7468791313367136,
+      "difficulty_rank": 3
+    },
+    {
+      "attack_type": "Printed",
+      "n_samples": 7497,
+      "apcer": 0.15152727757769774,
+      "detection_rate": 0.8484727224223023,
+      "mean_score": 0.3456524529891744,
+      "std_score": 0.17316534467782912,
+      "min_score": 0.0961784720420837,
+      "max_score": 1.0582441091537476,
+      "median_score": 0.2928957343101501,
+      "score_separation": 1.2405118434107378,
+      "difficulty_rank": 4
+    },
+    {
+      "attack_type": "Fake with Add On",
+      "n_samples": 67,
+      "apcer": 0.13432835820895522,
+      "detection_rate": 0.8656716417910448,
+      "mean_score": 0.33679004925400463,
+      "std_score": 0.11342346631403886,
+      "min_score": 0.1529842615127563,
+      "max_score": 0.6042467355728149,
+      "median_score": 0.3209404945373535,
+      "score_separation": 1.5926645799637118,
+      "difficulty_rank": 5
+    },
+    {
+      "attack_type": "Generated",
+      "n_samples": 4978,
+      "apcer": 0.08517476898352752,
+      "detection_rate": 0.9148252310164725,
+      "mean_score": 0.24384806549431762,
+      "std_score": 0.046461092577387925,
+      "min_score": 0.145350307226181,
+      "max_score": 0.6063162088394165,
+      "median_score": 0.2363861426711082,
+      "score_separation": 0.6946523539335561,
+      "difficulty_rank": 6
+    },
+    {
+      "attack_type": "Artifact",
+      "n_samples": 1643,
+      "apcer": 0.007303712720632989,
+      "detection_rate": 0.992696287279367,
+      "mean_score": 0.33039236176652437,
+      "std_score": 0.07794527063315908,
+      "min_score": 0.1751873791217804,
+      "max_score": 0.5861257910728455,
+      "median_score": 0.3184720873832702,
+      "score_separation": 1.556107333359808,
+      "difficulty_rank": 7
+    },
+    {
+      "attack_type": "PostMortem",
+      "n_samples": 3293,
+      "apcer": 0.0,
+      "detection_rate": 1.0,
+      "mean_score": 0.480862355996076,
+      "std_score": 0.10729422316967811,
+      "min_score": 0.2112003415822982,
+      "max_score": 0.8026801943778992,
+      "median_score": 0.4839395880699157,
+      "score_separation": 3.026840674541114,
+      "difficulty_rank": 8
+    }
+  ],
+  "hardest_attack": "E-display",
+  "easiest_attack": "PostMortem"
+}

@@ -1,0 +1,23 @@
+\begin{table}[t]
+\centering
+\caption{Zero-Attack-Knowledge (ZAK) threshold ablation. Setting $\tau$ at the 90th percentile of \emph{bona fide} validation scores (zero attack labels used at any stage) costs only $+2.96$ pp ACER while still outperforming all supervised baselines by $\geq7.9$ pp.}
+\label{tab:zak}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lcccccc}
+\toprule
+& \multicolumn{3}{c}{Current ($\tau$ via ACER-min, val attacks used)} & \multicolumn{3}{c}{ZAK ($\tau$ = p90 of bona fide val)} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+Attack Type & APCER & BPCER & ACER & APCER & BPCER & ACER \\ \midrule
+Artifact & 0.0 & 34.1 & 17.0 & \textbf{0.5} & \textbf{10.7} & \textbf{5.6} \\
+Contact Lens & 44.8 & 34.1 & 39.5 & 81.0 & 10.7 & 45.9 \\
+E-display & 12.1 & 34.1 & 23.1 & 40.0 & 10.7 & 25.3 \\
+Fake+AddOn & 0.0 & 34.1 & 17.0 & \textbf{4.5} & \textbf{10.7} & \textbf{7.6} \\
+Generated & 44.6 & 34.1 & 39.3 & 84.8 & 10.7 & 47.7 \\
+Post-Mortem & 0.2 & 34.1 & 17.2 & \textbf{6.3} & \textbf{10.7} & \textbf{8.5} \\
+Print+E-disp & 10.2 & 34.1 & 22.1 & 38.8 & 10.7 & 24.7 \\
+Printed & 13.0 & 34.1 & 23.5 & 47.6 & 10.7 & 29.1 \\
+\midrule
+\textbf{Overall} & 27.50 & -- & 27.50 & 30.46 & -- & 30.46 \\
+\bottomrule
+\end{tabular}
+\end{table}

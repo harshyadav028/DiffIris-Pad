@@ -1,0 +1,21 @@
+\begin{table}[htbp]
+  \centering
+  \caption{Comparison with open-set supervised baselines on the same dataset. Supervised models trained on 7 of 8 attack types. BBDM (bold) uses zero attack supervision.}
+  \label{tab:open_set}
+  \begin{tabular}{llrrr}
+    \toprule
+    Model & Type & ACER\% & APCER\% & BPCER\% \\
+    \midrule
+    DenseNet121\\_LastBlock & Supervised Open-Set & 38.39\\% & 71.82\\% & 4.97\\% \\
+    MobileNetV3LargeModel & Supervised Open-Set & 40.83\\% & 80.22\\% & 1.44\\% \\
+    EfficientNetV2SModel\\_LastBlock & Supervised Open-Set & 41.33\\% & 75.59\\% & 7.07\\% \\
+    MobileNetV2Model & Supervised Open-Set & 43.02\\% & 83.99\\% & 2.05\\% \\
+    SENetModel & Supervised Open-Set & 44.06\\% & 78.51\\% & 9.60\\% \\
+    MobileNetV3LargeModel\\_LastBlock & Supervised Open-Set & 46.67\\% & 87.16\\% & 6.17\\% \\
+    EfficientNetV2SModel & Supervised Open-Set & 47.06\\% & 93.18\\% & 0.93\\% \\
+    MobileNetV2Model\\_LastBlock & Supervised Open-Set & 49.44\\% & 93.43\\% & 5.46\\% \\
+    SENetModel\\_LastBlock & Supervised Open-Set & 50.31\\% & 90.75\\% & 9.87\\% \\
+    \textbf\{BBDM (Ours)\} & \textbf\{Unsupervised (BBDM)\} & \textbf\{26.49\\%\} & \textbf\{33.04\\%\} & \textbf\{19.93\\%\} \\
+    \bottomrule
+  \end{tabular}
+\end{table}

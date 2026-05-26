@@ -1,0 +1,28 @@
+Model,Attack_Type,APCER,BPCER,ACER,Threshold,Accuracy
+DDPM_Partial_gaussian_steps50_ViT,Artifact,0.003,0.9999,0.5015,0.5396,0.1125
+DDPM_Partial_gaussian_steps50_ViT,Contact Lens,0.1977,0.7553,0.4765,0.8858,0.4275
+DDPM_Partial_gaussian_steps50_ViT,E-display,0.0,1.0,0.5,0.4188,0.3002
+DDPM_Partial_gaussian_steps50_ViT,Fake w/ Add-On,0.6716,0.2933,0.4825,0.9554,0.7048
+DDPM_Partial_gaussian_steps50_ViT,Generated,0.597,0.3669,0.4819,0.9455,0.5691
+DDPM_Partial_gaussian_steps50_ViT,Post-Mortem,0.0307,0.9079,0.4693,0.8282,0.2702
+DDPM_Partial_gaussian_steps50_ViT,Print & E-disp.,0.8042,0.1213,0.4628,0.9853,0.6833
+DDPM_Partial_gaussian_steps50_ViT,Printed,0.994,0.0065,0.5002,1.0578,0.631
+DDPM_Partial_gaussian_steps50_ViT,,0.9907,0.0114,0.501,1.0457,0.2762
+DDPM_Partial_gaussian_steps50_Fixed,Artifact,0.0037,0.9996,0.5016,0.3073,0.1127
+DDPM_Partial_gaussian_steps50_Fixed,Contact Lens,0.2995,0.6853,0.4924,0.5528,0.4412
+DDPM_Partial_gaussian_steps50_Fixed,E-display,1.0,0.0,0.5,0.7988,0.6998
+DDPM_Partial_gaussian_steps50_Fixed,Fake w/ Add-On,0.8657,0.2226,0.5441,0.6151,0.7741
+DDPM_Partial_gaussian_steps50_Fixed,Generated,0.4747,0.3308,0.4027,0.5987,0.6292
+DDPM_Partial_gaussian_steps50_Fixed,Post-Mortem,0.0683,0.8682,0.4682,0.5145,0.2942
+DDPM_Partial_gaussian_steps50_Fixed,Print & E-disp.,0.7249,0.1946,0.4597,0.62,0.6537
+DDPM_Partial_gaussian_steps50_Fixed,Printed,0.8194,0.1311,0.4752,0.6344,0.6163
+DDPM_Partial_gaussian_steps50_Fixed,,0.9903,0.0093,0.4998,0.7082,0.277
+DDPM_Partial_gaussian_steps50_Dynamic,Artifact,0.3682,0.4468,0.4075,0.4778,0.5621
+DDPM_Partial_gaussian_steps50_Dynamic,Contact Lens,0.3109,0.7078,0.5094,0.4387,0.4223
+DDPM_Partial_gaussian_steps50_Dynamic,E-display,0.9989,0.0013,0.5001,0.6742,0.6992
+DDPM_Partial_gaussian_steps50_Dynamic,Fake w/ Add-On,0.9403,0.0882,0.5142,0.5495,0.9074
+DDPM_Partial_gaussian_steps50_Dynamic,Generated,0.3063,0.415,0.3607,0.4825,0.6152
+DDPM_Partial_gaussian_steps50_Dynamic,Post-Mortem,0.0717,0.8949,0.4833,0.3959,0.2723
+DDPM_Partial_gaussian_steps50_Dynamic,Print & E-disp.,0.4602,0.4379,0.4491,0.479,0.5557
+DDPM_Partial_gaussian_steps50_Dynamic,Printed,0.7596,0.1051,0.4324,0.5436,0.6546
+DDPM_Partial_gaussian_steps50_Dynamic,,0.5374,0.437,0.4872,0.4791,0.49

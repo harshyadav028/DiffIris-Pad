@@ -1,0 +1,152 @@
+% ============================================================
+% IJCB Paper — Iris PAD Evaluation Results
+% Generated: 2026-04-08
+% Source: iris_bbdm_pad/results/ (model: LBBDM-f4, scoring: LPIPS)
+% Requires: \usepackage{booktabs}, \usepackage{multirow}, \usepackage{siunitx}
+% ============================================================
+
+% ------------------------------------------------------------------
+% TABLE 1: Main Results — Per-Attack Breakdown (BBDM)
+% ------------------------------------------------------------------
+\begin{table}[t]
+  \centering
+  \caption{Per-attack PAD performance of our BBDM model on the test set.
+           Threshold is optimised per-attack-type on the validation set.
+           The Overall row uses a single global threshold ($\tau = 0.18$).}
+  \label{tab:main_results}
+  \begin{tabular}{llSSSS[table-format=1.4]S}
+    \toprule
+    \textbf{Model} & \textbf{Attack Type}
+      & \textbf{APCER (\%)} & \textbf{BPCER (\%)}
+      & \textbf{ACER (\%)}  & \textbf{Threshold}
+      & \textbf{Acc.\ (\%)} \\
+    \midrule
+    BBDM (Ours) & Artifact          &  4.44 & 34.01 &     19.23 & 0.2199 & 69.33 \\
+    BBDM (Ours) & Contact Lens      & 13.13 & 55.49 &     34.31 & 0.1612 & 58.40 \\
+    BBDM (Ours) & E-display         & 18.23 & 53.61 &     35.92 & 0.1649 & 57.01 \\
+    BBDM (Ours) & Fake w/ Add-On    & 28.36 & 18.02 &     23.19 & 0.2736 & 81.93 \\
+    BBDM (Ours) & Generated         &  6.39 & 43.61 &     25.00 & 0.1881 & 66.74 \\
+    BBDM (Ours) & Post-Mortem       &  3.89 &  9.37 & \textbf{6.63}  & 0.3149 & 91.74 \\
+    BBDM (Ours) & Print \& E-disp.  & 10.46 & 47.73 &     29.10 & 0.1782 & 62.93 \\
+    BBDM (Ours) & Printed           & 16.82 & 40.30 &     28.56 & 0.1981 & 68.32 \\
+    \midrule
+    BBDM (Ours) & \textbf{Overall}  & 14.72 & 45.51 &     30.12 & 0.1835 & 76.89 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+
+% ------------------------------------------------------------------
+% TABLE 2: Ablation Study 1 — Diffusion Type Comparison
+% ------------------------------------------------------------------
+%
+% NOTE: Standard DDPM and Conditional Diffusion rows are placeholders.
+%       iris_td/results/ddpm_run1/ contains only training checkpoints;
+%       no evaluation metrics CSV was found. Replace dashes once
+%       evaluation scripts are run for those variants.
+%
+\begin{table}[t]
+  \centering
+  \caption{Ablation study: effect of diffusion model type.
+           Threshold is optimised per-attack-type on the validation set.
+           (---) indicates results pending evaluation.}
+  \label{tab:ablation_model}
+  \begin{tabular}{llccccc}
+    \toprule
+    \textbf{Model} & \textbf{Attack Type}
+      & \textbf{APCER (\%)} & \textbf{BPCER (\%)}
+      & \textbf{ACER (\%)}  & \textbf{Threshold}
+      & \textbf{Acc.\ (\%)} \\
+    \midrule
+    \multirow{9}{*}{Standard DDPM}
+      & Artifact          & --- & --- & --- & --- & --- \\
+      & Contact Lens      & --- & --- & --- & --- & --- \\
+      & E-display         & --- & --- & --- & --- & --- \\
+      & Fake w/ Add-On    & --- & --- & --- & --- & --- \\
+      & Generated         & --- & --- & --- & --- & --- \\
+      & Post-Mortem       & --- & --- & --- & --- & --- \\
+      & Print \& E-disp.  & --- & --- & --- & --- & --- \\
+      & Printed           & --- & --- & --- & --- & --- \\
+      & \textbf{Overall}  & --- & --- & --- & --- & --- \\
+    \midrule
+    \multirow{9}{*}{Cond.\ Diffusion}
+      & Artifact          & --- & --- & --- & --- & --- \\
+      & Contact Lens      & --- & --- & --- & --- & --- \\
+      & E-display         & --- & --- & --- & --- & --- \\
+      & Fake w/ Add-On    & --- & --- & --- & --- & --- \\
+      & Generated         & --- & --- & --- & --- & --- \\
+      & Post-Mortem       & --- & --- & --- & --- & --- \\
+      & Print \& E-disp.  & --- & --- & --- & --- & --- \\
+      & Printed           & --- & --- & --- & --- & --- \\
+      & \textbf{Overall}  & --- & --- & --- & --- & --- \\
+    \midrule
+    \multirow{9}{*}{BBDM (Ours)}
+      & Artifact          &  4.44 & 34.01 &     19.23 & 0.2199 & 69.33 \\
+      & Contact Lens      & 13.13 & 55.49 &     34.31 & 0.1612 & 58.40 \\
+      & E-display         & 18.23 & 53.61 &     35.92 & 0.1649 & 57.01 \\
+      & Fake w/ Add-On    & 28.36 & 18.02 &     23.19 & 0.2736 & 81.93 \\
+      & Generated         &  6.39 & 43.61 &     25.00 & 0.1881 & 66.74 \\
+      & Post-Mortem       &  3.89 &  9.37 & \textbf{6.63}  & 0.3149 & 91.74 \\
+      & Print \& E-disp.  & 10.46 & 47.73 &     29.10 & 0.1782 & 62.93 \\
+      & Printed           & 16.82 & 40.30 &     28.56 & 0.1981 & 68.32 \\
+      & \textbf{Overall}  & 14.72 & 45.51 &     30.12 & 0.1835 & 76.89 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+
+% ------------------------------------------------------------------
+% TABLE 3: Ablation Study 2 — Denoising Steps
+% ------------------------------------------------------------------
+\begin{table}[t]
+  \centering
+  \caption{Ablation study: effect of the number of denoising steps at inference.
+           (*) marks the selected operating point (100 steps).
+           ACER, APCER, BPCER, and EER are percentages; AUC is in $[0,1]$.}
+  \label{tab:ablation_steps}
+  \begin{tabular}{rSSSSS[table-format=1.4]S[table-format=3.2]}
+    \toprule
+    \textbf{Steps}
+      & \textbf{ACER (\%)} & \textbf{APCER (\%)} & \textbf{BPCER (\%)}
+      & \textbf{EER (\%)}  & \textbf{AUC}
+      & \textbf{Time (ms/img)} \\
+    \midrule
+     10  & 32.15 & 36.48 & 27.38 & 34.47 & 0.7380 &  48.70 \\
+     25  & 29.84 & 34.99 & 24.57 & 32.44 & 0.7608 & 120.16 \\
+     50  & 28.23 & 32.57 & 23.18 & 29.52 & 0.7809 & 229.77 \\
+    100* & \textbf{26.66} & 33.61 & 20.92 & 27.79 & 0.7896 & 454.79 \\
+    200  & 26.71 & 33.22 & 21.07 & 27.70 & 0.7945 & 875.51 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+
+% ------------------------------------------------------------------
+% TABLE 4: Leave-One-Out Evaluation
+% ------------------------------------------------------------------
+\begin{table}[t]
+  \centering
+  \caption{Leave-one-out evaluation: the BBDM model is evaluated on each
+           attack type independently using a per-attack-type validation
+           threshold. The model was trained exclusively on bonafide images.
+           Overall row is the macro-average across all eight attack types.}
+  \label{tab:loo}
+  \begin{tabular}{lSSSS[table-format=1.4]}
+    \toprule
+    \textbf{Attack Left Out}
+      & \textbf{APCER (\%)} & \textbf{BPCER (\%)}
+      & \textbf{ACER (\%)}  & \textbf{Threshold} \\
+    \midrule
+    Artifact           &  4.44 & 34.01 &     19.23 & 0.2199 \\
+    Contact Lens       & 13.13 & 55.49 &     34.31 & 0.1612 \\
+    E-display          & 18.23 & 53.61 &     35.92 & 0.1649 \\
+    Fake with Add-On   & 28.36 & 18.02 &     23.19 & 0.2736 \\
+    Generated          &  6.39 & 43.61 &     25.00 & 0.1881 \\
+    Post-Mortem        &  3.89 &  9.37 & \textbf{6.63}  & 0.3149 \\
+    Print \& E-display & 10.46 & 47.73 &     29.10 & 0.1782 \\
+    Printed            & 16.82 & 40.30 &     28.56 & 0.1981 \\
+    \midrule
+    \textbf{Overall (macro avg)} & 12.72 & 37.77 & 25.24 & 0.2124 \\
+    \bottomrule
+  \end{tabular}
+\end{table}

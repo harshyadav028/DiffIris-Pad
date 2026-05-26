@@ -1,0 +1,18 @@
+Method,Supervision_required,Configuration,APCER,BPCER,ACER,ACER_pct,Note
+Diff-IrisPAD-current (recomputed),Val attack labels for tau,"50 DDIM steps, ViT scoring, ACER-min tau on val",0.2075,0.3436,0.2756,27.56,Recomputed from cached 50-step ViT scores
+"Diff-IrisPAD-current (paper, locked)",Val attack labels for tau,"50 DDIM steps, ViT scoring",0.208,0.343,0.276,27.6,Canonical from report_facts.md / IJCB Table 3
+ZAK-p90,None — bona fide val scores only,"50 DDIM steps, ViT scoring, tau=p90 of BF val",0.5026,0.1066,0.3046,30.46,Recomputed from cached 50-step ViT scores
+ZAK-p95,None — bona fide val scores only,"50 DDIM steps, ViT scoring, tau=p95 of BF val",0.6327,0.0555,0.3441,34.41,Recomputed from cached 50-step ViT scores
+ZAK-p97,None — bona fide val scores only,"50 DDIM steps, ViT scoring, tau=p97 of BF val",0.7289,0.0323,0.3806,38.06,Recomputed from cached 50-step ViT scores
+ZAK-p99,None — bona fide val scores only,"50 DDIM steps, ViT scoring, tau=p99 of BF val",0.8432,0.0144,0.4288,42.88,Recomputed from cached 50-step ViT scores
+ResNet50,Full attack labels (train + val),Supervised classifier,see_per_attack,see_per_attack,0.2082,20.82,"From report_facts.md (canonical), overall = unweighted mean of 8 ACERs"
+ViT-B,Full attack labels (train + val),Supervised classifier,see_per_attack,see_per_attack,0.2342,23.42,"From report_facts.md (canonical), overall = unweighted mean of 8 ACERs"
+MaxViT,Full attack labels (train + val),Supervised classifier,see_per_attack,see_per_attack,0.2136,21.36,"From report_facts.md (canonical), overall = unweighted mean of 8 ACERs"
+DINOv1,Full attack labels (train + val),Supervised classifier,see_per_attack,see_per_attack,0.2265,22.65,"From report_facts.md (canonical), overall = unweighted mean of 8 ACERs"
+DINOv2,Full attack labels (train + val),Supervised classifier,see_per_attack,see_per_attack,0.1991,19.91,"From report_facts.md (canonical), overall = unweighted mean of 8 ACERs"
+AnoDDPM_DDIM_Dynamic_50steps,None (unsupervised reconstruction),"AnoDDPM, DDIM, 50 steps, Dynamic LPIPS+ViT",0.3636,0.431,0.3973,39.73,"From report_facts.md (canonical), explicit overall row"
+DenseNet121,Full attack labels (train + val),Supervised classifier (mid-project exploration),N/A,N/A,0.3839,38.39,CONTEXT ONLY — not in IJCB paper. From comparison_all_models.csv
+MobileNetV3Large,Full attack labels (train + val),Supervised classifier (mid-project exploration),N/A,N/A,0.4083,40.83,CONTEXT ONLY — not in IJCB paper. From comparison_all_models.csv
+EfficientNetV2S,Full attack labels (train + val),Supervised classifier (mid-project exploration),N/A,N/A,0.4133,41.33,CONTEXT ONLY — not in IJCB paper. From comparison_all_models.csv
+MobileNetV2,Full attack labels (train + val),Supervised classifier (mid-project exploration),N/A,N/A,0.4302,43.02,CONTEXT ONLY — not in IJCB paper. From comparison_all_models.csv
+SENet,Full attack labels (train + val),Supervised classifier (mid-project exploration),N/A,N/A,0.4406,44.06,CONTEXT ONLY — not in IJCB paper. From comparison_all_models.csv

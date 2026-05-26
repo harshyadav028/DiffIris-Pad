@@ -1,0 +1,28 @@
+Model,Attack_Type,APCER,BPCER,ACER,Threshold,Accuracy
+DDPM_Vanilla_gaussian_steps50_ViT,Artifact,0.0091,0.9971,0.5031,0.8272,0.1143
+DDPM_Vanilla_gaussian_steps50_ViT,Contact Lens,0.1772,0.8064,0.4918,0.9263,0.3999
+DDPM_Vanilla_gaussian_steps50_ViT,E-display,0.6113,0.2754,0.4433,0.9927,0.6238
+DDPM_Vanilla_gaussian_steps50_ViT,Fake w/ Add-On,0.4179,0.4148,0.4164,0.9748,0.5852
+DDPM_Vanilla_gaussian_steps50_ViT,Generated,0.2075,0.6883,0.4479,0.9434,0.4454
+DDPM_Vanilla_gaussian_steps50_ViT,Post-Mortem,1.0,0.0004,0.5002,1.1654,0.7967
+DDPM_Vanilla_gaussian_steps50_ViT,Print & E-disp.,0.4689,0.2473,0.3581,0.9972,0.6893
+DDPM_Vanilla_gaussian_steps50_ViT,Printed,0.9028,0.0918,0.4973,1.0324,0.6105
+DDPM_Vanilla_gaussian_steps50_ViT,,0.7143,0.2489,0.4816,0.9969,0.4125
+DDPM_Vanilla_gaussian_steps50_Fixed,Artifact,0.6792,0.3098,0.4945,0.5684,0.6486
+DDPM_Vanilla_gaussian_steps50_Fixed,Contact Lens,0.3745,0.615,0.4948,0.5219,0.4638
+DDPM_Vanilla_gaussian_steps50_Fixed,E-display,0.0164,0.9958,0.5061,0.3612,0.2982
+DDPM_Vanilla_gaussian_steps50_Fixed,Fake w/ Add-On,0.5522,0.3837,0.468,0.5569,0.6154
+DDPM_Vanilla_gaussian_steps50_Fixed,Generated,0.1902,0.5917,0.391,0.5257,0.5199
+DDPM_Vanilla_gaussian_steps50_Fixed,Post-Mortem,0.0516,0.947,0.4993,0.4394,0.2348
+DDPM_Vanilla_gaussian_steps50_Fixed,Print & E-disp.,0.5091,0.2934,0.4013,0.5711,0.6449
+DDPM_Vanilla_gaussian_steps50_Fixed,Printed,0.9236,0.0622,0.4929,0.6327,0.6216
+DDPM_Vanilla_gaussian_steps50_Fixed,,0.6208,0.3669,0.4939,0.5594,0.4484
+DDPM_Vanilla_gaussian_steps50_Dynamic,Artifact,0.0091,0.9967,0.5029,0.3448,0.1147
+DDPM_Vanilla_gaussian_steps50_Dynamic,Contact Lens,0.1826,0.8026,0.4926,0.5097,0.4007
+DDPM_Vanilla_gaussian_steps50_Dynamic,E-display,0.5992,0.3168,0.458,0.6119,0.5984
+DDPM_Vanilla_gaussian_steps50_Dynamic,Fake w/ Add-On,0.4627,0.3888,0.4258,0.5958,0.6108
+DDPM_Vanilla_gaussian_steps50_Dynamic,Generated,0.2899,0.5825,0.4362,0.5585,0.4989
+DDPM_Vanilla_gaussian_steps50_Dynamic,Post-Mortem,1.0,0.0005,0.5003,0.9076,0.7965
+DDPM_Vanilla_gaussian_steps50_Dynamic,Print & E-disp.,0.4871,0.236,0.3615,0.632,0.6922
+DDPM_Vanilla_gaussian_steps50_Dynamic,Printed,0.9044,0.0909,0.4976,0.6889,0.6105
+DDPM_Vanilla_gaussian_steps50_Dynamic,,0.7181,0.249,0.4835,0.6285,0.4097

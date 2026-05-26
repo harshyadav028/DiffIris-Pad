@@ -1,0 +1,23 @@
+\begin{table*}[t]
+\centering
+\caption{Extended Table 3: Comparison of all methods with Zero-Attack-Knowledge (ZAK$^\dagger$) threshold rows added. $^\dagger$ZAK: threshold $\tau$ set at the 90th percentile of bona fide validation scores only --- zero attack labels used at any stage. AnoDDPM-ViT-ZAK uses ViT-only scoring (Table~3 AnoDDPM uses Dynamic LPIPS+ViT fusion; no val dynamic file is cached).}
+\label{tab:table3_extended}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lcccc|cccc}
+\toprule
+& \multicolumn{4}{c|}{AnoDDPM} & \multicolumn{4}{c}{Diff-IrisPAD (Ours)} \\
+Attack & \multicolumn{2}{c}{Dynamic (Table 3)} & \multicolumn{2}{c|}{ViT ZAK$^\dagger$} & \multicolumn{2}{c}{Table 3} & \multicolumn{2}{c}{ZAK$^\dagger$} \\
+Type & BPCER & ACER & BPCER & ACER & BPCER & ACER & BPCER & ACER \\ \midrule
+Artifact & 0.782 & 0.392 & 0.092 & 0.535 & 0.072 & $\mathbf{0.045}$ & 0.107 & 0.056 \\
+Contact Lens & 0.807 & 0.432 & 0.092 & 0.479 & 0.693 & $0.398$ & 0.107 & 0.459 \\
+E-display & 0.292 & 0.224 & 0.092 & 0.539 & 0.232 & $0.213$ & 0.107 & 0.253 \\
+Fake W/AO & 0.846 & 0.431 & 0.000 & 0.000 & 0.095 & $\mathbf{0.070}$ & 0.107 & 0.076 \\
+Generated & 0.406 & 0.253 & 0.092 & 0.487 & 0.567 & $0.346$ & 0.107 & 0.477 \\
+PostMortem & 0.575 & 0.321 & 0.092 & 0.421 & 0.120 & $\mathbf{0.084}$ & 0.107 & 0.085 \\
+Print & ED & 0.425 & 0.277 & 0.000 & 0.000 & 0.230 & $0.210$ & 0.107 & 0.247 \\
+Printed & 0.123 & 0.439 & 0.092 & 0.453 & 0.305 & $0.230$ & 0.107 & 0.291 \\
+\midrule
+\textbf{Overall} & 0.431 & 0.397 & 0.092 & 0.490 & 0.343 & \textbf{0.276} & 0.107 & 0.305 \\
+\bottomrule
+\end{tabular}
+\end{table*}

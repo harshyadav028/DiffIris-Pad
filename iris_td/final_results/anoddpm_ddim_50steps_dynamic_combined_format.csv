@@ -1,0 +1,10 @@
+Model,Attack_Type,APCER,BPCER,ACER,Threshold,Accuracy
+AnoDDPM_DDIM_Dynamic_50steps,Artifact,0.0012,0.7818,0.3915,0.5829,0.3063
+AnoDDPM_DDIM_Dynamic_50steps,CL,0.0571,0.8069,0.432,0.6189,0.4389
+AnoDDPM_DDIM_Dynamic_50steps,E-display,0.156,0.2923,0.2241,0.5071,0.7486
+AnoDDPM_DDIM_Dynamic_50steps,Fake with Add On,0.0149,0.8462,0.4306,0.6709,0.1581
+AnoDDPM_DDIM_Dynamic_50steps,Generated,0.0998,0.4057,0.2528,0.4565,0.6793
+AnoDDPM_DDIM_Dynamic_50steps,PostMortem,0.0668,0.5754,0.3211,0.4496,0.5279
+AnoDDPM_DDIM_Dynamic_50steps,Print and E-display,0.1284,0.4246,0.2765,0.4496,0.6601
+AnoDDPM_DDIM_Dynamic_50steps,Printed,0.7539,0.1232,0.4385,0.3298,0.6453
+AnoDDPM_DDIM_Dynamic_50steps,,0.3636,0.431,0.3973,0.4476,0.618

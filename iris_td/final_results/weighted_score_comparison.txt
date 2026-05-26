@@ -1,0 +1,95 @@
+========================================================================================
+STANDARD SCORE vs WEIGHTED α×MSE + β×LPIPS COMPARISON
+========================================================================================
+  Model                                                      Score    ACER     AUC
+  --------------------------------------------------------------------------------
+  DDPM vanilla  (Gaussian, t*=1000, 25 steps)          recon_score  48.93%  0.5070
+    -> weighted                                 α=0.2×mse+β=0.8×lpips  48.26%  0.5108
+
+  DDPM partial  (Gaussian, t*=500,  25 steps)          recon_score  45.41%  0.5468
+    -> weighted                                 α=0.4×mse+β=0.6×lpips  44.92%  0.5520
+
+  DDPM AnoDDPM  (Simplex,  t*=500,  25 steps)          lpips_score  42.92%  0.5935
+    -> weighted                                 α=0.0×mse+β=1.0×lpips  42.92%  0.5935
+
+  DDPM+DDIM     (Simplex,  t*=500,  50 steps)          lpips_score  40.34%  0.5717
+    -> weighted                                 α=0.0×mse+β=1.0×lpips  40.34%  0.5717
+
+  --------------------------------------------------------------------------------
+  Brownian Bridge (BBDM) <- target                     lpips_score  30.51%  0.7481
+========================================================================================
+
+  Best DDPM standard : DDPM+DDIM     (Simplex,  t*=500,  50 steps)  ACER=40.34%
+  Best DDPM weighted : DDPM+DDIM     (Simplex,  t*=500,  50 steps)  ACER=40.34%
+  Improvement from weighting: +0.00% ACER
+  BBDM still wins by: +9.83% ACER
+
+===============================================================================================
+FULL METRICS TABLE — ALL DDPM CONFIGS (STANDARD SCORE)
+===============================================================================================
+  Config                                          APCER   BPCER    ACER     EER     AUC     Acc
+  ----------------------------------------------------------------------------------------
+  DDPM vanilla  (Gaussian, t*=1000, 25 steps)    50.05%  47.80%  48.93%  48.92%  0.5070  51.58%
+  DDPM partial  (Gaussian, t*=500,  25 steps)    50.53%  40.29%  45.41%  45.20%  0.5468  56.92%
+  DDPM AnoDDPM  (Simplex,  t*=500,  25 steps)    41.27%  44.57%  42.92%  43.08%  0.5935  56.33%
+  DDPM+DDIM     (Simplex,  t*=500,  50 steps)    42.87%  37.81%  40.34%  40.40%  0.5717  60.81%
+  ----------------------------------------------------------------------------------------
+  BBDM (LBBDM-f4) <- reference                   42.22%  18.80%  30.51%  33.77%  0.7481
+===============================================================================================
+
+===============================================================================================
+FULL METRICS TABLE — ALL DDPM CONFIGS (WEIGHTED α×MSE + β×LPIPS)
+===============================================================================================
+  Config                                           α    β   APCER   BPCER    ACER     EER     AUC
+  -----------------------------------------------------------------------------------------------
+  DDPM vanilla  (Gaussian, t*=1000, 25 steps)    0.2  0.8  48.87%  47.64%  48.26%  48.14%  0.5108
+  DDPM partial  (Gaussian, t*=500,  25 steps)    0.4  0.6  49.20%  40.63%  44.92%  44.79%  0.5520
+  DDPM AnoDDPM  (Simplex,  t*=500,  25 steps)    0.0  1.0  41.27%  44.57%  42.92%  43.08%  0.5935
+  DDPM+DDIM     (Simplex,  t*=500,  50 steps)    0.0  1.0  42.87%  37.81%  40.34%  40.40%  0.5717
+  -----------------------------------------------------------------------------------------------
+  BBDM (LBBDM-f4) <- reference                    --   --  42.22%  18.80%  30.51%  33.77%  0.7481
+===============================================================================================
+
+==============================================================================
+PER-ATTACK BREAKDOWN — Best DDPM (weighted) vs BBDM
+==============================================================================
+  Best DDPM config: DDPM+DDIM     (Simplex,  t*=500,  50 steps)
+
+  Attack Type              Total  DDPM miss%  BBDM miss%   Winner      Gap
+  ------------------------------------------------------------------------
+  PostMortem                3293      94.59%     100.00%     DDPM     5.4%
+  Artifact                  1643      72.85%     100.00%     DDPM    27.1%
+  Generated                 4978      11.55%     100.00%     DDPM    88.4%
+  Printed                   7497      43.24%     100.00%     DDPM    56.8%
+  Fake with Add On            67      71.64%     100.00%     DDPM    28.4%
+  CL                        6304      60.04%     100.00%     DDPM    40.0%
+  Print and E-display       5180      12.90%     100.00%     DDPM    87.1%
+  E-display                 5546       7.55%     100.00%     DDPM    92.4%
+  ------------------------------------------------------------------------
+  miss% = attack miss rate (lower = better detection)
+==============================================================================
+
+==============================================================================
+PER-ATTACK BREAKDOWN — Best DDPM (DDIM, α=0.0×MSE+β=1.0×LPIPS) vs BBDM
+(BBDM scores NOT negated — correct direction)
+==============================================================================
+  Attack Type              Total  DDPM miss%  BBDM miss%   Winner      Gap
+  ------------------------------------------------------------------------
+  PostMortem                3293      94.59%       0.00%     BBDM    94.6% <<<
+  Artifact                  1643      72.85%       0.73%     BBDM    72.1% <<<
+  Generated                 4978      11.55%       8.52%     BBDM     3.0%
+  Printed                   7497      43.24%      15.15%     BBDM    28.1% <<<
+  Fake with Add On            67      71.64%      13.43%     BBDM    58.2% <<<
+  CL                        6304      60.04%      32.73%     BBDM    27.3% <<<
+  Print and E-display       5180      12.90%      17.32%     DDPM     4.4%
+  E-display                 5546       7.55%      35.07%     DDPM    27.5% <<<
+  ------------------------------------------------------------------------
+
+  Overall DDPM attack miss rate: 37.81%
+  Overall BBDM attack miss rate: 18.80%
+
+  miss% = fraction of attacks classified as bonafide (lower = better)
+  BBDM wins on most attacks via conditioned bridge reconstruction.
+==============================================================================
+
+BBDM available attack types: ['Artifact', 'CL', 'E-display', 'Fake with Add On', 'Generated', 'PostMortem', 'Print and E-display', 'Printed']

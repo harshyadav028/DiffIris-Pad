@@ -1,0 +1,10 @@
+,train,val,test,total
+Bonafide,28056,10552,10552,49160
+Artifact,0,704,1643,2347
+CL,0,2840,6304,9144
+E-display,0,2369,5546,7915
+Fake with Add On,0,39,67,106
+Generated,0,2986,4978,7964
+PostMortem,0,2196,3293,5489
+Print and E-display,0,2220,5180,7400
+Printed,0,2750,7497,10247

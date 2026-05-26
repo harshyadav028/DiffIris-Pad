@@ -1,0 +1,11 @@
+Model,Overall_ACER%,Best_Attack,Worst_Attack
+DenseNet121_LastBlock,38.39,Print and E-display (3.63%),CL (48.19%)
+MobileNetV3LargeModel,40.83,Fake with Add On (5.38%),Fake with Add On (5.38%)
+EfficientNetV2SModel_LastBlock,41.33,Print and E-display (5.80%),CL (49.80%)
+MobileNetV2Model,43.02,Fake with Add On (7.56%),Fake with Add On (7.56%)
+SENetModel,44.06,N/A,N/A
+MobileNetV3LargeModel_LastBlock,46.67,Print and E-display (4.63%),CL (49.23%)
+EfficientNetV2SModel,47.06,Fake with Add On (3.18%),Fake with Add On (3.18%)
+MobileNetV2Model_LastBlock,49.44,Print and E-display (5.17%),CL (47.26%)
+SENetModel_LastBlock,50.31,Fake with Add On (5.56%),CL (46.48%)
+BBDM (Ours),26.49,N/A (unsupervised),N/A (unsupervised)

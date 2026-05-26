@@ -1,0 +1,65 @@
+\begin{table}[!htbp]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\caption{\textbf{Ablation on denoising steps ($T$) under ZAK protocol.}
+$\tau$ is the 90th percentile of bona-fide-only validation scores; no attack labels used at any stage.
+Test pool combines validation and test attack splits.
+Results in \% (lower is better); \textbf{bold} = best ACER per attack across step counts.}
+\label{tab:ablation_study2}
+
+\begin{tabular}{l l c c c c c}
+\toprule
+\textbf{Steps} & \textbf{Atk} & APCER & BPCER & ACER & EER & ms/img \\
+\midrule
+
+\multirow{9}{*}{10}
+& Artifact       &   1.87 &   9.68 &        \textbf{5.78} &    6.21 & \multirow{9}{*}{84.4} \\
+& CL             &  85.71 &   9.68 &                47.69 &   41.62 &  \\
+& E-display      &  53.24 &   9.68 &                31.46 &   26.76 &  \\
+& Fake W/AO      &   6.60 &   9.68 &                 8.14 &    7.55 &  \\
+& Generated      &  88.16 &   9.68 &                48.92 &   42.32 &  \\
+& PostMortem     &  11.81 &   9.68 &                10.74 &   10.56 &  \\
+& Print \& ED    &  53.64 &   9.68 &                31.66 &   26.69 &  \\
+& Printed        &  56.42 &   9.68 &                33.05 &   27.08 &  \\
+& \textbf{All} &  58.33 &   9.68 &                34.00 &   30.97 & \\
+\midrule
+
+\multirow{9}{*}{50}
+& Artifact       &   0.89 &  10.66 &                 5.78 &    5.20 & \multirow{9}{*}{208.6} \\
+& CL             &  83.73 &  10.66 &                47.19 &   40.95 &  \\
+& E-display      &  41.07 &  10.66 &                25.87 &   21.91 &  \\
+& Fake W/AO      &   2.83 &  10.66 &        \textbf{6.75} &    7.55 &  \\
+& Generated      &  83.86 &  10.66 &                47.26 &   37.90 &  \\
+& PostMortem     &   5.78 &  10.66 &                 8.22 &    8.51 &  \\
+& Print \& ED    &  40.51 &  10.66 &                25.59 &   21.53 &  \\
+& Printed        &  48.19 &  10.66 &                29.43 &   23.37 &  \\
+& \textbf{All} &  51.10 &  10.66 &                30.88 &   27.72 & \\
+\midrule
+
+\multirow{9}{*}{100}
+& Artifact       &   0.98 &  11.19 &                 6.08 &    5.34 & \multirow{9}{*}{364.2} \\
+& CL             &  82.33 &  11.19 &       \textbf{46.76} &   40.98 &  \\
+& E-display      &  39.48 &  11.19 &       \textbf{25.33} &   21.81 &  \\
+& Fake W/AO      &   2.83 &  11.19 &                 7.01 &    6.54 &  \\
+& Generated      &  82.73 &  11.19 &                46.96 &   37.57 &  \\
+& PostMortem     &   4.45 &  11.19 &        \textbf{7.82} &    8.28 &  \\
+& Print \& ED    &  39.64 &  11.19 &       \textbf{25.41} &   21.57 &  \\
+& Printed        &  46.67 &  11.19 &       \textbf{28.93} &   23.43 &  \\
+& \textbf{All} &  49.84 &  11.19 &       \textbf{30.52} &   27.85 & \\
+\midrule
+
+\multirow{9}{*}{200}
+& Artifact       &   0.85 &  10.97 &                 5.91 &    5.30 & \multirow{9}{*}{671.9} \\
+& CL             &  83.14 &  10.97 &                47.05 &   40.88 &  \\
+& E-display      &  40.48 &  10.97 &                25.73 &   22.07 &  \\
+& Fake W/AO      &   2.83 &  10.97 &                 6.90 &    6.44 &  \\
+& Generated      &  82.92 &  10.97 &       \textbf{46.95} &   37.69 &  \\
+& PostMortem     &   5.28 &  10.97 &                 8.13 &    8.37 &  \\
+& Print \& ED    &  40.51 &  10.97 &                25.74 &   21.82 &  \\
+& Printed        &  48.16 &  10.97 &                29.57 &   23.95 &  \\
+& \textbf{All} &  50.69 &  10.97 &                30.83 &   27.76 & \\
+
+\bottomrule
+\end{tabular}
+\end{table}

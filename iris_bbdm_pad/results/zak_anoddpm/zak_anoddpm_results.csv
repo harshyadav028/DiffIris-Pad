@@ -1,0 +1,10 @@
+Method,Supervision,tau,APCER,BPCER,ACER,ACER_pct,Note
+AnoDDPM-ViT ZAK-p90,None (bona fide val only),0.8586,0.8888,0.0921,0.4904,49.04,ZAK p90 threshold on AnoDDPM-ViT (not Dynamic — no val dynamic file)
+AnoDDPM-ViT ZAK-p95,None (bona fide val only),0.884,0.9385,0.0517,0.4951,49.51,ZAK p95 threshold on AnoDDPM-ViT (not Dynamic — no val dynamic file)
+AnoDDPM-ViT ZAK-p97,None (bona fide val only),0.9003,0.9613,0.0313,0.4963,49.63,ZAK p97 threshold on AnoDDPM-ViT (not Dynamic — no val dynamic file)
+AnoDDPM-ViT ZAK-p99,None (bona fide val only),0.9219,0.9815,0.0145,0.498,49.8,ZAK p99 threshold on AnoDDPM-ViT (not Dynamic — no val dynamic file)
+"AnoDDPM-ViT current (recomputed, global tau)",Val attack labels for tau,0.1461,0.0247,0.9165,0.4706,47.06,Global ACER-min tau; ViT-only scoring (Table 3 uses Dynamic scoring ACER=39.73%)
+AnoDDPM-Dynamic (Table 3 canonical),Val attack labels for tau (per-attack),0.4476,0.3636,0.431,0.3973,39.73,Canonical from IJCB Table 3; Dynamic LPIPS+ViT fusion
+Diff-IrisPAD current (recomputed),Val attack labels for tau,0.0933,0.2094,0.3406,0.275,27.5,Recomputed from cached 50-step ViT scores
+Diff-IrisPAD (Table 3 canonical),Val attack labels for tau (per-attack),0.093,0.208,0.343,0.276,27.6,Canonical from IJCB Table 3
+Diff-IrisPAD ZAK-p90,None (bona fide val only),0.17,0.5026,0.1066,0.3046,30.46,ZAK p90 threshold; zero attack labels at any stage

@@ -1,0 +1,14 @@
+# Per-Attack Results
+
+Sorted by APCER descending (hardest attacks first).
+
+| Attack Type | N | APCER% | Detection Rate% | Mean Score | Std |
+| ----------- | --- | ------ | --------------- | ---------- | --- |
+| E-display | N/A | 35.07 | 64.93 | 0.2401 | N/A |
+| CL | N/A | 32.73 | 67.27 | 0.2265 | N/A |
+| Print and E-display | N/A | 17.32 | 82.68 | 0.2505 | N/A |
+| Printed | N/A | 15.15 | 84.85 | 0.3457 | N/A |
+| Fake with Add On | N/A | 13.43 | 86.57 | 0.3368 | N/A |
+| Generated | N/A | 8.52 | 91.48 | 0.2438 | N/A |
+| Artifact | N/A | 0.73 | 99.27 | 0.3304 | N/A |
+| PostMortem | N/A | 0.00 | 100.00 | 0.4809 | N/A |

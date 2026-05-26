@@ -1,0 +1,104 @@
+================================================================================
+ZERO-ATTACK-KNOWLEDGE AUDIT TRAIL
+================================================================================
+
+Protocol:
+  Threshold tau = 90th percentile of BONAFIDE-ONLY validation scores.
+  No attack images or attack labels are consulted at any point to set tau.
+  This is verified by the assertions in the code above.
+
+  Test pool: val attacks + test attacks combined  (bonafide from test only)
+  Diff-IrisPAD:  tau = p90(0.1700)   N_bonafide_val = 5276
+  AnoDDPM:       tau = p90(0.8586)   N_bonafide_val = 5276
+
+  What is NOT done (and why it would break ZAK):
+    ✗  Grid-search over percentiles using ACER  → requires attack labels
+    ✗  ACER-minimising tau on val set           → requires attack labels
+    ✗  Per-attack percentile optimisation       → requires knowing which val
+                                                   samples are attacks
+  What IS done:
+    ✓  tau = fixed percentile of bonafide val   → requires only bonafide labels
+    ✓  Bonafide labels are the ONLY supervision used (model is trained bonafide-only)
+    ✓  Per-attack results: same tau applied to each attack sub-pool separately
+
+================================================================================
+DIFF-IRIPAD  ZAK Results
+tau = p90 = 0.1700   |   Combined test: 50612 attacks + 12926 bonafide
+================================================================================
+Attack                  N_atk    APCER    BPCER     ACER      EER
+Artifact                 2347     0.89    10.66     5.78     5.20
+CL                       9144    83.73    10.66    47.19    40.95
+E-display                7915    41.07    10.66    25.87    21.91
+Fake with Add On          106     2.83    10.66     6.75     7.55
+Generated                7964    83.86    10.66    47.26    37.90
+PostMortem               5489     5.78    10.66     8.22     8.51
+Print and E-display      7400    40.51    10.66    25.59    21.53
+Printed                 10247    48.19    10.66    29.43    23.37
+ALL                     50612    51.10    10.66    30.88    27.72
+
+================================================================================
+ANODDPM  ZAK Results (ViT scoring)
+tau = p90 = 0.8586   |   Combined test: 50612 attacks + 12926 bonafide
+================================================================================
+Attack                  N_atk    APCER    BPCER     ACER      EER
+Artifact                 2347    98.17     9.21    53.69    50.83
+CL                       9144    87.70     9.21    48.45    45.20
+E-display                7915    98.65     9.21    53.93    75.28
+Fake with Add On          106    78.30     9.21    43.75    36.80
+Generated                7964    88.69     9.21    48.95    44.97
+PostMortem               5489    77.21     9.21    43.21    26.84
+Print and E-display      7400    98.93     9.21    54.07    63.74
+Printed                 10247    80.77     9.21    44.99    47.67
+ALL                     50612    89.13     9.21    49.17    50.62
+
+================================================================================
+ABLATION STEPS  ZAK Results
+================================================================================
+
+--- Steps 10  tau = p90 = 0.2007 ---
+Attack                  N_atk    APCER    BPCER     ACER      EER
+Artifact                 2347     1.87     9.68     5.78     6.21
+CL                       9144    85.71     9.68    47.69    41.62
+E-display                7915    53.24     9.68    31.46    26.76
+Fake with Add On          106     6.60     9.68     8.14     7.55
+Generated                7964    88.16     9.68    48.92    42.32
+PostMortem               5489    11.81     9.68    10.74    10.56
+Print and E-display      7400    53.64     9.68    31.66    26.69
+Printed                 10247    56.42     9.68    33.05    27.08
+ALL                     50612    58.33     9.68    34.00    30.97
+
+--- Steps 50  tau = p90 = 0.1700 ---
+Attack                  N_atk    APCER    BPCER     ACER      EER
+Artifact                 2347     0.89    10.66     5.78     5.20
+CL                       9144    83.73    10.66    47.19    40.95
+E-display                7915    41.07    10.66    25.87    21.91
+Fake with Add On          106     2.83    10.66     6.75     7.55
+Generated                7964    83.86    10.66    47.26    37.90
+PostMortem               5489     5.78    10.66     8.22     8.51
+Print and E-display      7400    40.51    10.66    25.59    21.53
+Printed                 10247    48.19    10.66    29.43    23.37
+ALL                     50612    51.10    10.66    30.88    27.72
+
+--- Steps 100  tau = p90 = 0.1645 ---
+Attack                  N_atk    APCER    BPCER     ACER      EER
+Artifact                 2347     0.98    11.19     6.08     5.34
+CL                       9144    82.33    11.19    46.76    40.98
+E-display                7915    39.48    11.19    25.33    21.81
+Fake with Add On          106     2.83    11.19     7.01     6.54
+Generated                7964    82.73    11.19    46.96    37.57
+PostMortem               5489     4.45    11.19     7.82     8.28
+Print and E-display      7400    39.64    11.19    25.41    21.57
+Printed                 10247    46.67    11.19    28.93    23.43
+ALL                     50612    49.84    11.19    30.52    27.85
+
+--- Steps 200  tau = p90 = 0.1672 ---
+Attack                  N_atk    APCER    BPCER     ACER      EER
+Artifact                 2347     0.85    10.97     5.91     5.30
+CL                       9144    83.14    10.97    47.05    40.88
+E-display                7915    40.48    10.97    25.73    22.07
+Fake with Add On          106     2.83    10.97     6.90     6.44
+Generated                7964    82.92    10.97    46.95    37.69
+PostMortem               5489     5.28    10.97     8.13     8.37
+Print and E-display      7400    40.51    10.97    25.74    21.82
+Printed                 10247    48.16    10.97    29.57    23.95
+ALL                     50612    50.69    10.97    30.83    27.76

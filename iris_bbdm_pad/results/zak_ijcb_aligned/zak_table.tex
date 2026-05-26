@@ -1,0 +1,24 @@
+\begin{table}[t]
+\centering
+\caption{Zero-Attack-Knowledge (ZAK) threshold analysis for Diff-IrisPAD (50 DDIM denoising steps, ViT-B/16 cosine-distance scoring). Setting $\tau$ at the 90th percentile of \emph{bona fide} validation scores requires zero attack labels at any stage. The cost is +2.86 pp overall ACER relative to the val-set-optimised threshold reported in Table~3.}
+\label{tab:zak_ijcb}
+\setlength{\tabcolsep}{4pt}
+\small
+\begin{tabular}{l ccc ccc}
+\toprule
+& \multicolumn{3}{c}{\textbf{Diff-IrisPAD (paper $\tau$)}} & \multicolumn{3}{c}{\textbf{Diff-IrisPAD ZAK-p90}} \\
+\cmidrule(lr){2-4} \cmidrule(lr){5-7}
+Attack Type & APCER & BPCER & ACER & APCER & BPCER & ACER \\ \midrule
+Artifact & 1.8 & 7.2 & 4.5 & 0.5 & 10.7 & 5.6 \\
+Contact Lens & 10.3 & 69.3 & 39.8 & 81.0 & 10.7 & 45.9 \\
+E-display & 19.4 & 23.2 & 21.3 & 40.0 & 10.7 & 25.3 \\
+Fake+AddOn & 4.5 & 9.5 & 7.0 & 4.5 & 10.7 & 7.6 \\
+Generated & 12.5 & 56.7 & 34.6 & 84.8 & 10.7 & 47.7 \\
+Post-Mortem & 4.9 & 12.0 & 8.4 & 6.3 & 10.7 & 8.5 \\
+Print+E-disp & 19.0 & 23.0 & 21.0 & 38.8 & 10.7 & 24.7 \\
+Printed & 15.6 & 30.5 & 23.0 & 47.6 & 10.7 & 29.1 \\
+\midrule
+\textbf{Overall} & \textbf{20.8} & \textbf{34.3} & \textbf{27.6} & 50.3 & 10.7 & 30.5 \\
+\bottomrule
+\end{tabular}
+\end{table}

@@ -1,0 +1,23 @@
+\begin{table}[t]
+\centering
+\small
+\caption{Leave-One-Out ACER (\%) comparison. Supervised models train on 7/8 attack types and test on the held-out type. \textbf{BBDM (ours)} trains on 0 attack types (bona fide images only). Lower is better. Bold = BBDM outperforms the best supervised model.}
+\label{tab:loo_acer}
+\begin{tabular}{l|ccccccccc}
+\toprule
+Model & Art. & CL & E-disp. & Fake+ & Gen. & P-M. & P+E & Print & \textbf{Avg.} \\
+\midrule
+EfficientNetV2SModel & — & — & — & 3.2 & — & — & — & — & 3.2 \\
+MobileNetV3LargeModel & — & — & — & 5.4 & — & — & — & — & 5.4 \\
+MobileNetV2Model & — & — & — & 7.6 & — & — & — & — & 7.6 \\
+DenseNet121 & — & 48.9 & 17.0 & 8.2 & 20.0 & 10.9 & 1.5 & 13.5 & 17.1 \\
+DenseNet121_LastBlock & — & 48.2 & 15.4 & 6.2 & 27.3 & 13.4 & 3.6 & 14.5 & 18.4 \\
+MobileNetV2Model_LastBlock & — & 47.3 & 19.6 & 11.1 & 17.2 & 15.8 & 5.2 & 23.7 & 20.0 \\
+MobileNetV3LargeModel_LastBlock & — & 49.2 & 18.0 & 6.1 & 20.4 & 19.1 & 4.6 & 23.2 & 20.1 \\
+EfficientNetV2SModel_LastBlock & — & 49.8 & 22.0 & 8.3 & 26.2 & 17.0 & 5.8 & 22.7 & 21.7 \\
+SENetModel_LastBlock & — & 46.5 & 19.1 & 5.6 & 23.9 & 26.8 & 9.4 & 22.7 & 22.0 \\
+\midrule
+\textbf{BBDM_LBBDM-f4} & 19.2 & \textbf{34.3} & 35.9 & 23.2 & 25.0 & \textbf{6.6} & 29.1 & 28.6 & 25.2 \\
+\bottomrule
+\end{tabular}
+\end{table}

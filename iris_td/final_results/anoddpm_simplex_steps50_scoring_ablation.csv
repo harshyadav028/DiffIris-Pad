@@ -1,0 +1,28 @@
+Model,Attack_Type,APCER,BPCER,ACER,Threshold,Accuracy
+AnoDDPM_simplex_steps50_ViT,Artifact,0.0,1.0,0.5,0.3801,0.1128
+AnoDDPM_simplex_steps50_ViT,Contact Lens,0.4385,0.5352,0.4868,0.9074,0.4965
+AnoDDPM_simplex_steps50_ViT,E-display,0.985,0.0149,0.4999,1.0198,0.6939
+AnoDDPM_simplex_steps50_ViT,Fake w/ Add-On,0.806,0.0859,0.4459,0.9772,0.9104
+AnoDDPM_simplex_steps50_ViT,Generated,0.3803,0.305,0.3426,0.9344,0.6741
+AnoDDPM_simplex_steps50_ViT,Post-Mortem,0.0118,0.9456,0.4787,0.803,0.244
+AnoDDPM_simplex_steps50_ViT,Print & E-disp.,0.4882,0.2886,0.3884,0.9365,0.6543
+AnoDDPM_simplex_steps50_ViT,Printed,0.6465,0.2744,0.4605,0.9384,0.589
+AnoDDPM_simplex_steps50_ViT,,0.6598,0.2769,0.4684,0.9381,0.4445
+AnoDDPM_simplex_steps50_Fixed,Artifact,0.0006,0.9999,0.5003,0.267,0.1128
+AnoDDPM_simplex_steps50_Fixed,Contact Lens,0.4369,0.5805,0.5087,0.511,0.4666
+AnoDDPM_simplex_steps50_Fixed,E-display,1.0,0.0004,0.5002,0.7463,0.6995
+AnoDDPM_simplex_steps50_Fixed,Fake w/ Add-On,0.5224,0.3638,0.4431,0.5376,0.6354
+AnoDDPM_simplex_steps50_Fixed,Generated,0.1882,0.2442,0.2162,0.5556,0.7713
+AnoDDPM_simplex_steps50_Fixed,Post-Mortem,0.2779,0.4541,0.366,0.526,0.5817
+AnoDDPM_simplex_steps50_Fixed,Print & E-disp.,0.3618,0.3908,0.3763,0.5342,0.6175
+AnoDDPM_simplex_steps50_Fixed,Printed,0.6114,0.2432,0.4273,0.5557,0.6216
+AnoDDPM_simplex_steps50_Fixed,,0.6082,0.2579,0.433,0.5531,0.4872
+AnoDDPM_simplex_steps50_Dynamic,Artifact,0.0268,0.944,0.4854,0.3535,0.1594
+AnoDDPM_simplex_steps50_Dynamic,Contact Lens,0.3964,0.6744,0.5354,0.4301,0.4167
+AnoDDPM_simplex_steps50_Dynamic,E-display,0.0362,0.9833,0.5098,0.326,0.3011
+AnoDDPM_simplex_steps50_Dynamic,Fake w/ Add-On,0.4478,0.3599,0.4038,0.471,0.6397
+AnoDDPM_simplex_steps50_Dynamic,Generated,0.1527,0.2508,0.2017,0.4902,0.7765
+AnoDDPM_simplex_steps50_Dynamic,Post-Mortem,0.3003,0.4128,0.3566,0.4638,0.61
+AnoDDPM_simplex_steps50_Dynamic,Print & E-disp.,0.2734,0.4865,0.3799,0.4543,0.5745
+AnoDDPM_simplex_steps50_Dynamic,Printed,0.5768,0.2849,0.4308,0.4839,0.608
+AnoDDPM_simplex_steps50_Dynamic,,0.4896,0.3775,0.4336,0.4682,0.5409

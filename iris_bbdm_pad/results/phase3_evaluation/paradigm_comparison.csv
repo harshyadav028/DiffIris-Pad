@@ -1,0 +1,5 @@
+Approach,Requires Attack Data,Open-Set Capable,ACER Range,Notes
+Closed-set Supervised CNN,Yes (all types),No,0.2% – 2.3%,Requires attack samples for all test types
+Open-set Supervised CNN,Yes (partial),Partial,1.6% – 50.3%,Degrades on unseen attack types
+BBDM Anomaly Detection (Ours),,Yes,26.5%,First BBDM-based iris PAD; truly zero-shot on attacks
+BBDM ZAK Threshold (Ours — Zero Attack Labels),None (not even for threshold),Yes,30.5%,Threshold set from bona fide val scores only (p90 percentile); proves method is fully independent of attack supervision

@@ -1,0 +1,127 @@
+# BBDM Configuration — Iris PAD (Bona Fide Only Training)
+# LBBDM-f4: Latent Brownian Bridge Diffusion Model, f4 latent space
+#
+# CRITICAL NOTES:
+#   - No !!python/tuple tags anywhere — yaml.safe_load() rejects them
+#   - n_steps must be large enough: n_epochs * estimated_iters/epoch + buffer
+#     200 epochs * ~2000 iters/epoch + 10000 buffer = 410000
+#   - dataset key is lowercase "data" not "Dataset"
+
+runner: "BBDMRunner"
+
+training:
+  n_epochs: 200
+  n_steps: 410000         # Primary terminator. Must exceed n_epochs * iters_per_epoch.
+  save_interval: 10       # Save checkpoint every N epochs
+  sample_interval: 10     # Generate samples every N epochs
+  validation_interval: 10 # Run validation every N epochs
+  accumulate_grad_batches: 4
+
+testing:
+  clip_denoised: False
+  sample_num: 5
+
+data:
+  dataset_name: 'iris_bonafide_pad'
+  dataset_type: 'custom_aligned'
+  dataset_config:
+    dataset_path: 'iris_bbdm_pad/data/bonafide_pairs'
+    image_size: 256
+    channels: 3
+    to_normal: True
+    flip: False
+  train:
+    batch_size: 16
+    shuffle: True
+  val:
+    batch_size: 16
+    shuffle: False
+  test:
+    batch_size: 16
+
+model:
+  model_name: "LBBDM-f4"
+  model_type: "LBBDM"
+  latent_before_quant_conv: False
+  normalize_latent: False
+  only_load_latent_mean_std: False
+  # model_load_path:       # Uncomment to resume training from checkpoint
+  # optim_sche_load_path:  # Uncomment to resume optimizer/scheduler
+
+  EMA:
+    use_ema: True
+    ema_decay: 0.995
+    update_ema_interval: 8   # steps
+    start_ema_step: 30000
+
+  CondStageParams:
+    n_stages: 2
+    in_channels: 3
+    out_channels: 3
+
+  VQGAN:
+    params:
+      ckpt_path: 'BBDM/resources/vq-f4/model.ckpt'
+      embed_dim: 3
+      n_embed: 8192
+      ddconfig:
+        double_z: false
+        z_channels: 3
+        resolution: 256
+        in_channels: 3
+        out_ch: 3
+        ch: 128
+        # CRITICAL: plain list, NOT !!python/tuple
+        ch_mult: [1, 2, 4]
+        num_res_blocks: 2
+        attn_resolutions: []
+        dropout: 0.0
+
+      lossconfig:
+        target: torch.nn.Identity
+
+  BB:
+    optimizer:
+      weight_decay: 0.000
+      optimizer: 'Adam'
+      lr: 1.0e-4
+      beta1: 0.9
+
+    lr_scheduler:
+      factor: 0.5
+      patience: 3000
+      threshold: 0.0001
+      cooldown: 3000
+      min_lr: 5.0e-7
+
+    params:
+      mt_type: 'linear'   # options: 'linear', 'sin'
+      objective: 'grad'   # options: 'grad', 'noise', 'ysubx'
+      loss_type: 'l1'     # options: 'l1', 'l2'
+
+      skip_sample: True
+      sample_type: 'linear'  # options: 'linear', 'sin'
+      sample_step: 200
+
+      num_timesteps: 1000   # diffusion timesteps
+      eta: 1.0              # DDIM eta
+      max_var: 1.0          # maximum variance
+
+      UNetParams:
+        image_size: 64          # latent spatial size (256 / f4 = 64)
+        in_channels: 3
+        model_channels: 128
+        out_channels: 3
+        num_res_blocks: 2
+        # CRITICAL: plain lists, NOT !!python/tuple
+        attention_resolutions: [32, 16, 8]
+        channel_mult: [1, 2, 3, 4]
+        conv_resample: True
+        dims: 2
+        num_heads: 8
+        num_head_channels: 64
+        use_scale_shift_norm: True
+        resblock_updown: True
+        use_spatial_transformer: False
+        context_dim:
+        condition_key: "nocond"

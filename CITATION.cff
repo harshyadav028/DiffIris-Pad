@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+message: "If you use this code, please cite the accompanying paper."
+title: "Diff-IrisPAD: Unsupervised Iris Presentation Attack Detection via Latent Brownian Bridge Diffusion Models"
+authors:
+  - family-names: "Yadav"
+    given-names: "Harsh"
+  - name: "Group 18, IIT Mandi"
+repository-code: "https://github.com/[TO-BE-ADDED]"
+institution:
+  name: "Indian Institute of Technology Mandi"
+  department: "School of Computing and Electrical Engineering"
+course: "CS671 Deep Learning, Spring 2026"
+abstract: >
+  Diff-IrisPAD is an unsupervised iris presentation attack detection system
+  that trains a Latent Brownian Bridge Diffusion Model (LBBDM-f4) on bona fide
+  iris images only and detects attacks via ViT-B/16 cosine reconstruction
+  divergence. Achieves ACER 0.276 on LivDet-Iris 2025 across 8 attack types,
+  outperforming supervised baselines including DINOv2.
+keywords:
+  - iris presentation attack detection
+  - diffusion models
+  - Brownian bridge
+  - unsupervised anomaly detection
+  - biometrics
+license: MIT
+year: 2026

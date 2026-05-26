@@ -1,0 +1,70 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.eggs/
+dist/
+build/
+*.so
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Editor
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Model checkpoints — do NOT commit (upload to HuggingFace instead)
+*.pth
+*.ckpt
+*.pt
+checkpoint_staging/
+
+# Dataset — not redistributed
+Images/
+
+# Training image pairs and preprocessed images (derived from dataset, not redistributed)
+iris_bbdm_pad/data/bonafide_pairs/
+iris_bbdm_pad/data/preprocessed/
+iris_bbdm_pad/data/evaluation_sets/
+iris_td/data/bonafide_pairs/
+iris_td/data/preprocessed/
+
+# Large training/inference outputs
+results/iris_bonafide_pad/LBBDM-f4/image/
+results/iris_bonafide_pad/LBBDM-f4/log/
+results/iris_bonafide_pad/LBBDM-f4/samples/
+results/iris_bonafide_pad/LBBDM-f4/sample_to_eval/
+results/iris_bonafide_ddpm/
+iris_td/results/
+iris_bbdm_pad/results/bbdm_training.log
+
+# Open_Set supervised baseline outputs (large LOO result CSVs and logs)
+Open_Set/
+
+# Raw score CSVs (large, 30+ configs — keep only final metrics)
+iris_td/pad_scores/
+
+# TensorBoard event files
+*.tfevents.*
+
+# Logs
+*.log
+
+# Conda / pip
+.conda/
+*.egg
+
+# Misc
+vq-f4.zip
+rollback_*.tar.gz

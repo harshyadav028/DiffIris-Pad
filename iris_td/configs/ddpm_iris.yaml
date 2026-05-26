@@ -1,0 +1,113 @@
+# DDPM Configuration — Iris PAD Ablation Study (Baseline vs BBDM)
+# Standard DDPM with linear beta schedule — fair comparison baseline
+#
+# CRITICAL NOTES:
+#   - No !!python/tuple tags anywhere — yaml.safe_load() rejects them
+#   - n_steps must be large enough: n_epochs * estimated_iters/epoch + buffer
+#     200 epochs * ~2000 iters/epoch + 10000 buffer = 410000
+#   - dataset key is lowercase "data" not "Dataset"
+
+runner: "DDPMRunner"
+
+training:
+  n_epochs: 200
+  n_steps: 410000         # Primary terminator. Must exceed n_epochs * iters_per_epoch.
+  save_interval: 3        # Save checkpoint every N epochs
+  sample_interval: 3      # Generate samples every N epochs
+  validation_interval: 3  # Run validation every N epochs
+  accumulate_grad_batches: 2
+
+testing:
+  clip_denoised: False
+  sample_num: 5
+
+data:
+  dataset_name: 'iris_bonafide_ddpm'
+  dataset_type: 'custom_aligned'
+  dataset_config:
+    dataset_path: 'iris_td/data/bonafide_pairs'
+    image_size: 256
+    channels: 3
+    to_normal: True
+    flip: False
+  train:
+    batch_size: 32
+    shuffle: True
+  val:
+    batch_size: 32
+    shuffle: False
+  test:
+    batch_size: 32
+
+model:
+  model_name: "DDPM"
+  model_type: "DDPM"
+  # model_load_path:       # Uncomment to resume training from checkpoint
+  # optim_sche_load_path:  # Uncomment to resume optimizer/scheduler
+
+  EMA:
+    use_ema: True
+    ema_decay: 0.995
+    update_ema_interval: 8   # steps
+    start_ema_step: 30000
+
+  optimizer:
+    weight_decay: 0.000
+    optimizer: 'Adam'
+    lr: 1.0e-4
+    beta1: 0.9
+
+  lr_scheduler:
+    factor: 0.5
+    patience: 3000
+    threshold: 0.0001
+    cooldown: 3000
+    min_lr: 5.0e-7
+
+  # Flat config keys consumed by LatentDDPM.__init__
+  # VQGAN encoder — identical to BBDM (compresses 256×256 → 64×64 latent)
+  vqgan_config:
+    ckpt_path: 'BBDM/resources/vq-f4/model.ckpt'
+    embed_dim: 3
+    n_embed: 8192
+    ddconfig:
+      double_z: false
+      z_channels: 3
+      resolution: 256
+      in_channels: 3
+      out_ch: 3
+      ch: 128
+      # CRITICAL: plain list, NOT !!python/tuple
+      ch_mult: [1, 2, 4]
+      num_res_blocks: 2
+      attn_resolutions: []
+      dropout: 0.0
+    lossconfig:
+      target: torch.nn.Identity
+
+  ddpm_config:
+    num_timesteps: 1000
+    beta_schedule: "linear"
+    beta_start: 0.0001
+    beta_end: 0.02
+
+  unet_config:
+    image_size: 64          # latent spatial size (256 / f4 = 64) — same as BBDM
+    in_channels: 3
+    model_channels: 128
+    out_channels: 3
+    num_res_blocks: 2
+    # CRITICAL: plain lists, NOT !!python/tuple
+    attention_resolutions: [32, 16, 8]
+    channel_mult: [1, 2, 3, 4]
+    conv_resample: True
+    dims: 2
+    num_heads: 8
+    num_head_channels: 64
+    use_scale_shift_norm: True
+    resblock_updown: True
+    use_spatial_transformer: False
+    context_dim: ~
+    condition_key: "nocond"
+
+result_path: "iris_td/results/ddpm_run1"
