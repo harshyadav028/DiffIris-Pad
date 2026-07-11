@@ -1,8 +1,6 @@
 # Diff-IrisPAD: Diffusion-Based Iris Presentation Attack Detection
 
-**Zero Attack Knowledge (ZAK) Protocol — IJCB Submission**
-CS671 Deep Learning & Applications | IIT Mandi (Spring 2026)
-Group 18 | Mentor: Geetanjali Sharma | Evaluator: Dr. Aditya Nigam
+**This project is accepted to publications to IEEE/IAPR International Joint Conference on Biometrics 2026**
 
 **Checkpoints:** [huggingface.co/realharshyadav/DiffIris_Pad_checkpointings](https://huggingface.co/realharshyadav/DiffIris_Pad_checkpointings/tree/main)
 **Code:** [github.com/harshyadav028/DiffIris-Pad](https://github.com/harshyadav028/DiffIris-Pad)
