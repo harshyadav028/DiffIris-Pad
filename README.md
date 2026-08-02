@@ -1,6 +1,6 @@
 # Diff-IrisPAD: Diffusion-Based Iris Presentation Attack Detection
 
-**This project is accepted for publication to IEEE/IAPR International Joint Conference on Biometrics 2026 (results are announced on 08/07/2026 via gmail)**
+**This research project is accepted for publication to IEEE/IAPR International Joint Conference on Biometrics 2026 (results are announced on 08/07/2026 via gmail)**
 
 **Checkpoints:** [huggingface.co/realharshyadav/DiffIris_Pad_checkpointings](https://huggingface.co/realharshyadav/DiffIris_Pad_checkpointings/tree/main)
 **Code:** [github.com/harshyadav028/DiffIris-Pad](https://github.com/harshyadav028/DiffIris-Pad)
