@@ -2,7 +2,7 @@
 
 **This research project is accepted for publication to IEEE/IAPR International Joint Conference on Biometrics 2026 (results are announced on 08/07/2026 via gmail)**
 
-Repo submitted in camera-ready submission: https://github.com/GeetanjaliGTZ/DiffIrisPAD
+Repo submitted in camera-ready submission for publication in IEEE Xplore: https://github.com/GeetanjaliGTZ/DiffIrisPAD
 
 **Checkpoints:** [huggingface.co/realharshyadav/DiffIris_Pad_checkpointings](https://huggingface.co/realharshyadav/DiffIris_Pad_checkpointings/tree/main)
 **Code:** [github.com/harshyadav028/DiffIris-Pad](https://github.com/harshyadav028/DiffIris-Pad)
