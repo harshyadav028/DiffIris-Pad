@@ -11,7 +11,7 @@ Repo submitted in camera-ready submission for publication in IEEE Xplore: https:
 
 Diff-IrisPAD trains a Latent Brownian Bridge Diffusion Model (LBBDM-f4) exclusively on bonafide iris images and detects presentation attacks via ViT-B/16 cosine reconstruction divergence. The system requires **zero attack labels** at any stage — training, threshold setting, or inference.
 
-**Overall ACER: 30.88% (ZAK protocol)** | **27.60% (val-optimised)** on LivDet-Iris 2025 (8 attack types, 50,612 combined attack images).
+**Overall ACER: 30.46% (ZAK protocol)** | **27.60% (val-optimised)** on LivDet-Iris 2025 (8 attack types, 50,612 combined attack images).
 
 ---
 
