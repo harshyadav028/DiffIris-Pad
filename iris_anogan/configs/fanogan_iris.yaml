@@ -1,0 +1,81 @@
+# f-AnoGAN Configuration — Iris PAD
+#
+# Two-stage training:
+#   Stage 1 (gan):     WGAN-GP on bonafide VQGAN latents
+#   Stage 2 (encoder): "ziz" encoder trained to invert Generator
+#
+# CRITICAL NOTES:
+#   - No !!python/tuple tags — yaml.safe_load() rejects them
+#   - VQGAN checkpoint shared from BBDM/resources (never modified)
+#   - bonafide_pairs_root points to iris_td data (already preprocessed, no duplication)
+
+# ── Data ─────────────────────────────────────────────────────────────────────
+
+data:
+  # Reuse iris_td's already-preprocessed bonafide pairs (no re-processing needed)
+  bonafide_pairs_root: "iris_td/data/bonafide_pairs"
+  train:
+    batch_size: 32
+    shuffle: True
+  val:
+    batch_size: 32
+    shuffle: False
+
+# ── VQGAN (frozen) ───────────────────────────────────────────────────────────
+# Identical to iris_td — borrows BBDM checkpoint, never modifies BBDM files.
+
+vqgan:
+  ckpt_path: "BBDM/resources/vq-f4/model.ckpt"
+  embed_dim: 3
+  n_embed: 8192
+  ddconfig:
+    double_z: false
+    z_channels: 3
+    resolution: 256
+    in_channels: 3
+    out_ch: 3
+    ch: 128
+    ch_mult: [1, 2, 4]
+    num_res_blocks: 2
+    attn_resolutions: []
+    dropout: 0.0
+  lossconfig:
+    target: torch.nn.Identity
+
+# ── Generator / Discriminator / Encoder ──────────────────────────────────────
+
+model:
+  z_dim: 128                # GAN latent dimension
+  latent_channels: 3        # VQGAN output channels (matches z_channels above)
+  gen_base_channels: 512    # Generator feature width
+  disc_base_channels: 64    # Discriminator / Encoder feature width
+  lambda_gp: 10.0           # WGAN-GP gradient penalty weight
+  kappa: 1.0                # Feature-matching weight in anomaly score and encoder loss
+
+# ── Stage 1 — GAN training ───────────────────────────────────────────────────
+
+stage1:
+  n_epochs: 100
+  n_critic: 5               # Discriminator steps per Generator step (WGAN convention)
+  lr_gen: 1.0e-4
+  lr_disc: 1.0e-4
+  beta1: 0.0                # Adam β₁ = 0 for WGAN-GP (standard)
+  beta2: 0.9
+  save_interval: 10         # Save checkpoint every N epochs
+  val_interval: 10          # Validate every N epochs
+  sample_interval: 10       # Save sample grid every N epochs
+  n_sample_images: 16       # Images in saved sample grid
+
+# ── Stage 2 — Encoder training ───────────────────────────────────────────────
+
+stage2:
+  n_epochs: 100
+  lr_enc: 1.0e-4
+  beta1: 0.5
+  beta2: 0.999
+  save_interval: 10
+  val_interval: 10
+
+# ── Paths ─────────────────────────────────────────────────────────────────────
+
+result_path: "iris_anogan/results/fanogan_run1"
