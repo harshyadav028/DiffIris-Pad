@@ -37,8 +37,7 @@ Images/
 iris_bbdm_pad/data/bonafide_pairs/
 iris_bbdm_pad/data/preprocessed/
 iris_bbdm_pad/data/evaluation_sets/
-iris_td/data/bonafide_pairs/
-iris_td/data/preprocessed/
+iris_td/data/
 
 # Large training/inference outputs
 results/iris_bonafide_pad/LBBDM-f4/image/
@@ -54,6 +53,14 @@ Open_Set/
 
 # Raw score CSVs (large, 30+ configs — keep only final metrics)
 iris_td/pad_scores/
+
+# f-AnoGAN large outputs (weights are on HuggingFace; see README)
+# NOTE: results/*/pad_scores/*.csv ARE committed, matching iris_bbdm_pad/results/
+# (Table 2 baseline scores), so DET curves are reproducible without a GPU.
+iris_anogan/checkpoints/
+iris_anogan/results/*/stage1/samples/*
+iris_anogan/results/*/stage2/samples/*
+!iris_anogan/results/*/stage1/samples/epoch_0100.png
 
 # TensorBoard event files
 *.tfevents.*
