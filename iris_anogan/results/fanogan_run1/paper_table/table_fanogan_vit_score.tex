@@ -1,0 +1,22 @@
+\begin{table}[t]
+\centering
+\small
+\caption{f-AnoGAN (Ours) per-attack PAD performance under the zero-attack-knowledge protocol identical to Diff-IrisPAD Table~2. Scoring: ViT-B/16 cosine (same scoring as paper Table 2). Threshold $\tau$ = 90th percentile of bona-fide validation scores ($\tau{=}0.977$); applied to 50{,}612 attacks (val+test) vs 12{,}926 bona-fide test images. BPCER is constant across attacks; only APCER varies.}
+\label{tab:fanogan_vitscore}
+\begin{tabular}{l|cccc}
+\toprule
+Attack & APCER & BPCER & ACER & EER \\
+\midrule
+Artifact & 99.06 & 9.55 & 54.31 & 60.00 \\
+Contact Lens & 98.34 & 9.55 & 53.95 & 56.48 \\
+E-display & 87.96 & 9.55 & 48.76 & 41.20 \\
+Fake W/AO & 99.06 & 9.55 & 54.31 & 68.18 \\
+Generated & 98.93 & 9.55 & 54.24 & 60.63 \\
+Post-Mortem & 93.39 & 9.55 & 51.47 & 46.87 \\
+Print \& ED & 84.43 & 9.55 & 46.99 & 40.05 \\
+Printed & 91.77 & 9.55 & 50.66 & 52.54 \\
+\midrule
+\textbf{OverAll} & \textbf{92.94} & \textbf{9.55} & \textbf{51.25} & \textbf{50.97} \\
+\bottomrule
+\end{tabular}
+\end{table}
